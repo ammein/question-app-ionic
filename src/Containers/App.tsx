@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import SignUp from './Pages/SignUp/SignUp';
+import { IonApp } from '@ionic/react';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <p>Its working !</p>
-      </div>
+      <IonApp>
+        <SignUp/>
+      </IonApp>
     );
   }
 }

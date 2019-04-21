@@ -1,0 +1,19 @@
+.LogoArea{
+    width: 100%;
+    height: 100%;
+    background-color: green;
+}
+
+.BottomBtnMain{
+    bottom : 0;
+    position : absolute;
+    width: 100%;
+    align-content: stretch;
+}
+
+.Title{
+    font-size: 32px;
+    font-weight: bold;
+    color : #212121;
+    text-align: center;
+}

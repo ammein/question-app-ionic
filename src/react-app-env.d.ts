@@ -63,6 +63,8 @@ declare module '*.module.sass' {
   export default classes;
 }
 
+declare module "*.css";
+
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
