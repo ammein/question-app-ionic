@@ -21,7 +21,7 @@ class MainMenu extends Component<Props , State>{
     }
     render(){
         return (
-            <IonMenu type="overlay" side="start" contentId="main" swiperGesture={false}>
+            <IonMenu type="overlay" side="start" contentId="main" swipeGesture={false}>
                 <IonHeader>
                     <IonToolbar color={this.props.toolbarColor ? this.props.toolbarColor : "primary"}>
                         <IonTitle>Menu</IonTitle>

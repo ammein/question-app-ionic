@@ -32,7 +32,7 @@ const SubMenu = (props : any) => {
                             </IonItem> 
                         </Link>  
                         :
-                        <IonItem onClick={props.getLink ? ((e : any)=> props.pushLink(e , props.getLink)) : null}>
+                        <IonItem onClick={props.getLink ? ((e : any)=> props.pushLink(e , props.getLink)) : undefined}>
                             <IonRippleEffect type="unbounded"></IonRippleEffect>
                             {value.thumbnail ?
                                 <IonThumbnail slot="start">
