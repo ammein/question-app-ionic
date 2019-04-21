@@ -8,51 +8,56 @@ const SubMenu = (props : any) => {
         <Aux>
             {props.data.map((value : any , i : number , arr : any[])=>{
                 return (
-                    <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
-                    {value.link ? 
-                        <Link to={value.path}>
-                            <IonItem>
-                                <IonRippleEffect type="unbounded"></IonRippleEffect>
-                                {value.thumbnail ? 
-                                    <IonThumbnail slot="start">
-                                        <IonImg src={value.thumbnail}/>
-                                    </IonThumbnail>
+                    <Aux>
+                        {value.menu ? 
+                            <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
+                                {value.link ?
+                                    <Link to={value.path}>
+                                        <IonItem>
+                                            <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                            {value.thumbnail ?
+                                                <IonThumbnail slot="start">
+                                                    <IonImg src={value.thumbnail} />
+                                                </IonThumbnail>
+                                                :
+                                                null
+                                            }
+                                            {
+                                                value.icon ?
+                                                    <IonIcon name={value.icon} slot="start"></IonIcon>
+                                                    :
+                                                    null
+                                            }
+                                            <IonLabel>
+                                                {value.title}
+                                            </IonLabel>
+                                        </IonItem>
+                                    </Link>
                                     :
-                                    null
+                                    <IonItem onClick={props.getLink ? ((e: any) => props.pushLink(e, props.getLink)) : undefined}>
+                                        <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                        {value.thumbnail ?
+                                            <IonThumbnail slot="start">
+                                                <IonImg src={value.thumbnail} />
+                                            </IonThumbnail>
+                                            :
+                                            null
+                                        }
+                                        {
+                                            value.icon ?
+                                                <IonIcon name={value.icon} slot="start"></IonIcon>
+                                                :
+                                                null
+                                        }
+                                        <IonLabel>
+                                            {value.title}
+                                        </IonLabel>
+                                    </IonItem>
                                 }
-                                {
-                                    value.icon ?
-                                    <IonIcon name={value.icon} slot="start"></IonIcon>
-                                    :
-                                    null
-                                }
-                                <IonLabel>
-                                    {value.title}
-                                </IonLabel>
-                            </IonItem> 
-                        </Link>  
-                        :
-                        <IonItem onClick={props.getLink ? ((e : any)=> props.pushLink(e , props.getLink)) : undefined}>
-                            <IonRippleEffect type="unbounded"></IonRippleEffect>
-                            {value.thumbnail ?
-                                <IonThumbnail slot="start">
-                                    <IonImg src={value.thumbnail} />
-                                </IonThumbnail>
-                                :
-                                null
-                            }
-                            {
-                                value.icon ?
-                                    <IonIcon name={value.icon} slot="start"></IonIcon>
-                                    :
-                                    null
-                            }
-                            <IonLabel>
-                                {value.title}
-                            </IonLabel>
-                        </IonItem> 
-                    }
-                    </IonMenuToggle>
+                            </IonMenuToggle>
+                            : null    
+                        }
+                    </Aux>
                 )
             })}
         </Aux>
