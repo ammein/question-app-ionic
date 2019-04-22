@@ -8,7 +8,7 @@ const SubMenu = (props : any) => {
         <Aux>
             {props.data.map((value : any , i : number , arr : any[])=>{
                 return (
-                    <Aux>
+                    <Aux key={i}>
                         {value.menu ? 
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
                                 {value.link ?
@@ -34,7 +34,7 @@ const SubMenu = (props : any) => {
                                         </IonItem>
                                     </Link>
                                     :
-                                    <IonItem onClick={props.getLink ? ((e: any) => props.pushLink(e, props.getLink)) : undefined}>
+                                    <IonItem key={i} onClick={props.getLink ? ((e: any) => props.pushLink(e, props.getLink)) : undefined}>
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">

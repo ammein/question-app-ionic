@@ -14,7 +14,8 @@ const Routes : MyRoutes[] = [
     {
         path : "/",
         menu : true,
-        title : "Home"
+        title : "Home",
+        exact : true
     },
     {
         path : "/topics",

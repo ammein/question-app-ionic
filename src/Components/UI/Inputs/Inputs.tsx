@@ -3,12 +3,12 @@ import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import {IonInput, IonItem, IonLabel} from '@ionic/react';
 
 
-const inputElements = (props : any) => {
+const InputElements = ({data} : any) => {
     return(
         <Aux>
-            {props.data.map((value : any , i : number , arr : any[])=>{
+            {data.map((value : any , i : number , arr : any[])=>{
                 return (
-                    <Aux>
+                    <Aux key={i}>
                     {
                         value.enableLabel ? 
                         <IonItem key={i + value.type}>
@@ -18,7 +18,16 @@ const inputElements = (props : any) => {
                             clearInput={value.clearInput ? true : false}
                             type={value.type}
                             disabled={value.disabled ? true : false}
-                            readonly={value.readonly ? true : false} /> 
+                            readonly={value.readonly ? true : false}
+                            placeholder={value.placeholder}
+                            onIonChange={value.onChange ? ((e : any) => value.onChange(e)) : undefined}
+                            name={value.name}
+                            style={value.style ? value.style : null}
+                            required={value.required ? true : false}
+                            min={value.min? value.min : undefined}
+                            max={value.max ? value.max : undefined}
+                            minlength={value.minlength ? value.minlength : undefined}
+                            maxlength={value.maxLength ? value.maxLength : undefined} /> 
                         </IonItem>
                             : 
                         <IonInput
@@ -27,7 +36,16 @@ const inputElements = (props : any) => {
                             clearInput={value.clearInput ? true : false}
                             type={value.type}
                             disabled={value.disabled ? true : false}
-                            readonly={value.readonly ? true : false} />
+                            readonly={value.readonly ? true : false}
+                            placeholder={value.placeholder}
+                            onIonChange={value.onChange ? ((e : any) => value.onChange(e)) : undefined}
+                            name={value.name}
+                            style={value.style ? value.style : null}
+                            required={value.required ? true : false}
+                            min={value.min? value.min : undefined}
+                            max={value.max ? value.max : undefined}
+                            minlength={value.minlength ? value.minlength : undefined}
+                            maxlength={value.maxLength ? value.maxLength : undefined} />
                     }
                     </Aux>
                 )
@@ -35,4 +53,4 @@ const inputElements = (props : any) => {
         </Aux>
     );
 }
-export default inputElements;
+export default InputElements;
