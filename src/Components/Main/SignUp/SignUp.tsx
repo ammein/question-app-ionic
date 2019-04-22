@@ -11,7 +11,7 @@ const SignUp : React.SFC<Props> = (props) => {
 
     return(
         <Aux>
-            <div className={classes.SignUpArea}>
+            <div id="signUp" className={classes.SignUpArea}>
                 <InputElements data={props.data}/>
             </div>
         </Aux>

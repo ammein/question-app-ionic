@@ -10,7 +10,7 @@ export interface Props {
 const SignIn : React.SFC<Props> = (props : any) => {
     return(
         <Aux>
-            <div className={classes.SignInArea}>
+            <div id="signIn" className={classes.SignInArea}>
                 <InputElements data={props.data}/>
             </div>
         </Aux>

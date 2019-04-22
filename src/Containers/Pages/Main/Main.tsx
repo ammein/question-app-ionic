@@ -70,11 +70,18 @@ class Main extends Component<Props , State>{
 
     SignUpSubmitHandler = (e : any) =>{
         e.preventDefault();
+        var SignUp = e.currentTarget.parentElement.parentElement.parentElement;
+        var password = SignUp.querySelector("#signUp").querySelector("input[name='password']");
+        var confirmPassword = SignUp.querySelector("#signUp").querySelector("input[name='confirmPassword']");
+        var email = SignUp.querySelector("#signUp").querySelector("input[name='email']");
         console.log("Running Sign Up Submit Handler")
     }
 
     SignInSubmitHandler = (e : any) =>{
         e.preventDefault();
+        var SignIn = e.currentTarget.parentElement.parentElement.parentElement;
+        var password = SignIn.querySelector("#signIn").querySelector("input[name='password']");
+        var email = SignIn.querySelector("#signIn").querySelector("input[name='email']");
         console.log("Running Sign In Submit Handler");
     }
 
