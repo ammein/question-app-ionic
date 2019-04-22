@@ -1,20 +1,19 @@
 import React from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import InputElements from '../../UI/Inputs/Inputs';
-import classes from './SignUp.css';
+import classes from './SignIn.css';
 
-interface Props {
-    data? : any[]
+export interface Props {
+    data : any[]
 }
 
-const SignUp : React.SFC<Props> = (props) => {
-
+const SignIn : React.SFC<Props> = (props : any) => {
     return(
         <Aux>
-            <div className={classes.SignUpArea}>
+            <div className={classes.SignInArea}>
                 <InputElements data={props.data}/>
             </div>
         </Aux>
     );
 }
-export default SignUp;
+export default SignIn;
