@@ -4,6 +4,7 @@ import { IonContent, IonImg, IonPage, IonButtons, IonButton, IonRippleEffect } f
 import classes from './Main.css';
 import { Inputs } from '../../../Utils/Declaration/Utils';
 import SignUp from '../../../Components/Main/SignUp/SignUp';
+import SignIn from '../../../Components/Main/SignIn/SignIn';
 
 interface Props {
     
@@ -85,14 +86,14 @@ class Main extends Component<Props , State>{
         console.log("Running Sign In Submit Handler");
     }
 
-    chooseLogin = (e : any) =>{
+    chooseLogin = (e : any , custom? : string) =>{
         e.preventDefault()
-        if (e.currentTarget.textContent === "Sign Up"){
+        if (e.currentTarget.textContent === "Sign Up" || custom === "Sign Up"){
             return this.setState({
                 enableSignUp : true,
                 enableSignIn : false
             });
-        } else if (e.currentTarget.textContent === "Sign In"){
+        } else if (e.currentTarget.textContent === "Sign In" || custom === "Sign In"){
             return this.setState({
                 enableSignUp: false,
                 enableSignIn : true
@@ -100,7 +101,23 @@ class Main extends Component<Props , State>{
         }
     }
 
+
+
     render() : any{
+
+        var SignUpBox : CSSProperties ;
+
+        SignUpBox = {
+            transform: "translateX(-1000px)",
+            transition: "transform 0.35s ease-in-out"
+        }
+
+        var SignInBox : CSSProperties;
+
+        SignInBox = {
+            transform: "translateX(1000px)",
+            transition : "transform 0.35s ease-out"
+        }
 
         const BtnStyle : CSSProperties = {
             height: "60px",
@@ -128,10 +145,14 @@ class Main extends Component<Props , State>{
 
         if(this.state.enableSignUp){
             Object.assign(SignInStyle , newStyle);
+            SignUpBox.transform = "translateX(0px)";
+            SignInBox.display = "none";
         }
 
         if(this.state.enableSignIn){
             Object.assign(SignUpStyle, newStyle);
+            SignInBox.transform = "translateX(0px)";
+            SignUpBox.display = "none";
         }
 
         return (
@@ -143,7 +164,8 @@ class Main extends Component<Props , State>{
                             <p>Question App</p>
                         </div>
                     </div>
-                    <SignUp data={this.state.signUp}/>
+                    <SignUp data={this.state.signUp} style={SignUpBox} enableSignUp={((e: any) => this.chooseLogin(e , "Sign In"))}/>
+                    <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))}/>
                     <div className={classes.BottomBtnMain}>
                         <IonButtons>
                             <IonButton 

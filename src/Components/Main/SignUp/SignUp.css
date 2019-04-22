@@ -1,3 +1,10 @@
 .SignUpArea {
     padding: 0 40px;
 }
+
+.SignBack{
+    color :#78B7FF;
+    text-align: center;
+    display: block;
+    font-size: 15px;
+}

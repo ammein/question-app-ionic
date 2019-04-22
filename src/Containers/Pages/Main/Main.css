@@ -1,7 +1,6 @@
 .LogoArea{
     width: 100%;
     height: 100%;
-    background-color: green;
 }
 
 .BottomBtnMain{
@@ -14,7 +13,7 @@
 .Title{
     font-size: 32px;
     font-weight: bold;
-    color : #212121;
+    color : white;
     text-align: center;
 }
 
