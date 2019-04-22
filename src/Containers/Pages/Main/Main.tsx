@@ -3,7 +3,7 @@ import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import { IonContent, IonImg, IonPage, IonButtons, IonButton, IonRippleEffect } from '@ionic/react';
 import classes from './Main.css';
 import { Inputs } from '../../../Utils/Declaration/Utils';
-import SignUp from './SignUp/SignUp';
+import SignUp from '../../../Components/Main/SignUp/SignUp';
 
 interface Props {
     

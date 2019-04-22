@@ -1,7 +1,7 @@
 import React from 'react';
-import Aux from '../../../../HOC/Auxilliary/Auxilliary';
-import InputElements from '../../../../Components/UI/Inputs/Inputs';
-import {Inputs} from '../../../../Utils/Declaration/Utils';
+import Aux from '../../../HOC/Auxilliary/Auxilliary';
+import InputElements from '../../UI/Inputs/Inputs';
+import {Inputs} from '../../../Utils/Declaration/Utils';
 import classes from './SignUp.css';
 
 interface Props {
