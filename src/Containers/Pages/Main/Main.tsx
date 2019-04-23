@@ -109,17 +109,25 @@ class Main extends Component<Props , State>{
 
         SignUpBox = {
             transform: "translateX(-1000px)",
-            transition: "transform 0.35s ease-in-out"
+            transition: "transform 0.35s ease-in-out",
+            opacity : 0,
+            display : "none"
         }
+
+        var logoMergeArea : CSSProperties = {
+            margin: "200px 0px 160px"
+        };
 
         var SignInBox : CSSProperties;
 
         SignInBox = {
             transform: "translateX(1000px)",
-            transition : "transform 0.35s ease-out"
+            transition : "transform 0.35s ease-out",
+            opacity : 0,
+            display : "none"
         }
 
-        const BtnStyle : CSSProperties = {
+        var BtnStyle : CSSProperties = {
             height: "60px",
             flexGrow: 1,
             margin : "0",
@@ -127,15 +135,15 @@ class Main extends Component<Props , State>{
             transition :"all 1s ease-in"
         }
 
-        const SignInStyle : CSSProperties = {
+        var SignInStyle : CSSProperties = {
             backgroundColor: "#3C5B80"
         }
 
-        const SignUpStyle : CSSProperties = {
+        var SignUpStyle : CSSProperties = {
             backgroundColor: "#78B7FF"
         }
 
-        const newStyle: CSSProperties = {
+        var newStyle: CSSProperties = {
             animation: classes.button,
             animationDuration: "0.3s",
             animationIterationCount: 1,
@@ -146,26 +154,32 @@ class Main extends Component<Props , State>{
         if(this.state.enableSignUp){
             Object.assign(SignInStyle , newStyle);
             SignUpBox.transform = "translateX(0px)";
-            SignInBox.display = "none";
+            SignUpBox.opacity = 1;
+            SignUpBox.display = "block";
+            logoMergeArea.margin = "120px 0 95px 0";
         }
 
         if(this.state.enableSignIn){
             Object.assign(SignUpStyle, newStyle);
             SignInBox.transform = "translateX(0px)";
-            SignUpBox.display = "none";
+            SignInBox.opacity = 1
+            SignInBox.display = "block";
+            logoMergeArea.margin = "120px 0px 160px";
         }
 
         return (
             <Aux>
                 <IonPage>
-                    <div className={classes.LogoArea}>
+                    <div className={classes.LogoArea} style={logoMergeArea}>
                         <IonImg src=""></IonImg>
                         <div className={classes.Title}>
                             <p>Question App</p>
                         </div>
                     </div>
-                    <SignUp data={this.state.signUp} style={SignUpBox} enableSignUp={((e: any) => this.chooseLogin(e , "Sign In"))}/>
-                    <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))}/>
+                    <div className={classes.InputArea}>
+                        <SignUp data={this.state.signUp} style={SignUpBox} enableSignUp={((e: any) => this.chooseLogin(e, "Sign In"))} />
+                        <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))} />
+                    </div>
                     <div className={classes.BottomBtnMain}>
                         <IonButtons>
                             <IonButton 

@@ -1,13 +1,16 @@
 .LogoArea{
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition : all 0.5s ease;
 }
 
 .BottomBtnMain{
     bottom : 0;
-    position : absolute;
+    position : fixed;
     width: 100%;
-    align-content: stretch;
 }
 
 .Title{
@@ -15,6 +18,10 @@
     font-weight: bold;
     color : white;
     text-align: center;
+}
+
+.InputArea{
+    margin : 0;
 }
 
 @keyframes button{
