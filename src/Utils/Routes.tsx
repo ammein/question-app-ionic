@@ -1,16 +1,9 @@
 import MyRoutes from "./Declaration/Utils";
+import Main from "../Containers/Pages/Main/Main";
+
+declare const firebase : any;
 
 const Routes : MyRoutes[] = [
-    {
-        path: "/signup",
-        menu: false,
-        title: "Sign Up"
-    },
-    {
-        path : "/signin",
-        menu : false,
-        title : "Sign In"
-    },
     {
         path : "/",
         menu : true,
@@ -36,8 +29,20 @@ const Routes : MyRoutes[] = [
         path : "/questions",
         menu : false,
         title : "Questions"
+    },
+    {
+        title : "Sign Out",
+        menu : true,
+        signOut : (()=>{
+            firebase.auth().signOut().then(function(){
+                console.log("User has successfully sign out !");
+            }).catch((e : any)=>{
+                console.log(e);
+            })
+        })
     }
 ];
+
 
 
 export const getPath = (id : any) =>{

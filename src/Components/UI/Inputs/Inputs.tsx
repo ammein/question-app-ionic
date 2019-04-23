@@ -5,13 +5,12 @@ import classes from './Inputs.css';
 
 const errorStyle : CSSProperties = {
     marginBottom: "20px",
-    color: "red",
+    color: "#ff3939",
     fontSize: "12px"
 }
 
 
 const InputElements = ({data} : any) => {
-
 
     return(
         <Aux>
@@ -29,7 +28,7 @@ const InputElements = ({data} : any) => {
                             disabled={value.disabled ? true : false}
                             readonly={value.readonly ? true : false}
                             placeholder={value.placeholder}
-                            onIonChange={value.onChange ? ((e : any) => value.onChange(e)) : undefined}
+                            onIonChange={value.onChange ? ((e : any) => value.onChange(e)) : ()=> {}}
                             name={value.name}
                             style={value.style ? value.style : null}
                             required={value.required ? true : false}
@@ -49,7 +48,7 @@ const InputElements = ({data} : any) => {
                             disabled={value.disabled ? true : false}
                             readonly={value.readonly ? true : false}
                             placeholder={value.placeholder}
-                            onIonChange={value.onChange ? ((e : any) => value.onChange(e)) : undefined}
+                                        onIonChange={value.onChange ? ((e: any) => value.onChange(e)) : () => { }}
                             name={value.name}
                             style={value.style ? value.style : null}
                             required={value.required ? true : false}

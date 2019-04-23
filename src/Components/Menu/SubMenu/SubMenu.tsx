@@ -9,7 +9,7 @@ const SubMenu = (props : any) => {
             {props.data.map((value : any , i : number , arr : any[])=>{
                 return (
                     <Aux key={i}>
-                        {value.menu ? 
+                        {value.menu && !value.signOut ? 
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
                                 {value.link ?
                                     <Link to={value.path}>
@@ -34,7 +34,7 @@ const SubMenu = (props : any) => {
                                         </IonItem>
                                     </Link>
                                     :
-                                    <IonItem key={i} onClick={props.getLink ? ((e: any) => props.pushLink(e, props.getLink)) : undefined}>
+                                    <IonItem key={i} onClick={value.getLink ? ((e: any) => value.pushLink(e, value.getLink)) : undefined}>
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">
@@ -56,6 +56,32 @@ const SubMenu = (props : any) => {
                                 }
                             </IonMenuToggle>
                             : null    
+                        }
+                        {
+                            value.signOut ?
+                            <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
+                                    <IonItem key={i} onClick={value.signOut}>
+                                        <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                        {value.thumbnail ?
+                                            <IonThumbnail slot="start">
+                                                <IonImg src={value.thumbnail} />
+                                            </IonThumbnail>
+                                            :
+                                            null
+                                        }
+                                        {
+                                            value.icon ?
+                                                <IonIcon name={value.icon} slot="start"></IonIcon>
+                                                :
+                                                null
+                                        }
+                                        <IonLabel>
+                                            {value.title}
+                                        </IonLabel>
+                                    </IonItem>
+                            </IonMenuToggle>
+                            :
+                            null
                         }
                     </Aux>
                 )

@@ -1,20 +1,21 @@
-import React , { Component, CSSProperties, HTMLAttributes, ButtonHTMLAttributes } from 'react';
+import React , { Component, CSSProperties } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
-import { IonContent, IonImg, IonPage, IonButtons, IonButton, IonRippleEffect } from '@ionic/react';
+import { IonImg, IonPage, IonButtons, IonButton, IonRippleEffect } from '@ionic/react';
 import classes from './Main.css';
-import { Inputs } from '../../../Utils/Declaration/Utils';
+import { Inputs, Auth } from '../../../Utils/Declaration/Utils';
 import SignUp from '../../../Components/Main/SignUp/SignUp';
 import SignIn from '../../../Components/Main/SignIn/SignIn';
+import Content from '../../../HOC/Content/Content';
+
+declare const firebase : any;
 
 interface Props {
     
 }
 
-interface State {
+interface State extends Auth {
     signUp : Inputs[],
-    signIn : Inputs[],
-    enableSignIn? : boolean,
-    enableSignUp? : boolean
+    signIn : Inputs[]
 }
 
 var styleInput : CSSProperties = {
@@ -82,7 +83,7 @@ class Main extends Component<Props , State>{
                 return val.name === "confirmPassword"
             }).map((val: Inputs, i: number, arr: Inputs[]) => {
                 val.error = true;
-                val.value = "";
+                var newStyle = val.style;
                 val.errorMessage = "Password not match !";
                 return val;
             });
@@ -94,15 +95,31 @@ class Main extends Component<Props , State>{
                 }
             })
         }
-        console.log("Running Sign Up Submit Handler")
+        return firebase.auth().createUserWithEmailAndPassword(email.value, password.value).catch(function (error : any) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+        });
     }
 
     SignInSubmitHandler = (e : any) =>{
         e.preventDefault();
+        const react = this;
         var SignIn = e.currentTarget.parentElement.parentElement.parentElement;
         var password = SignIn.querySelector("#signIn").querySelector("input[name='password']");
         var email = SignIn.querySelector("#signIn").querySelector("input[name='email']");
         console.log("Running Sign In Submit Handler");
+        firebase.auth().signInWithEmailAndPassword(email.value, password.value).catch(function (error : any) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+            // return react.setState({
+            //     authenticated : false
+            // });
+        });
+
     }
 
     chooseLogin = (e : any , custom? : string) =>{
@@ -156,6 +173,10 @@ class Main extends Component<Props , State>{
                 }
             })
         }
+    }
+
+    componentDidMount(){
+        var path : string = window.location.hash.length > 1 ? window.location.hash.replace("#" , "") : window.location.pathname;
     }
 
     render() : any{
@@ -224,7 +245,12 @@ class Main extends Component<Props , State>{
 
         return (
             <Aux>
-                <IonPage>
+                <IonPage style={{
+                    position: "absolute",
+                    zIndex: 999,
+                    width: "100%"
+                }}>
+                    <Content {...this.props}>
                     <div className={classes.LogoArea} style={logoMergeArea}>
                         <IonImg src=""></IonImg>
                         <div className={classes.Title}>
@@ -253,6 +279,7 @@ class Main extends Component<Props , State>{
                             </IonButton>
                         </IonButtons>
                     </div>
+                    </Content>
                 </IonPage>
             </Aux>
         )

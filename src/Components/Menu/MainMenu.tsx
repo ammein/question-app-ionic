@@ -3,9 +3,12 @@ import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList } from '@
 import Routes , {PageState, MyProps , ArrayRoutes} from '../../Utils/Declaration/Utils';
 import SubMenu from './SubMenu/SubMenu';
 import MyRoutes from '../../Utils/Routes';
+import Aux from '../../HOC/Auxilliary/Auxilliary';
+import context from '../../HOC/Context/Context';
 
 interface Props extends MyProps {
-    toolbarColor ? : string
+    toolbarColor ? : string,
+    disableMenu? : any
 }
 
 interface State extends ArrayRoutes {
@@ -13,15 +16,20 @@ interface State extends ArrayRoutes {
 }
 
 class MainMenu extends Component<Props , State>{
+
+    static MyContext = context;
+
     constructor(props : Props){
         super(props)
         this.state = {
             allRoutes : [...MyRoutes]
         }
     }
+
     render(){
         return (
-            <IonMenu type="overlay" side="start" contentId="main" swipeGesture={false}>
+            <Aux>
+            <IonMenu type="push" side="start" contentId="main" swipeGesture={true} menuId="menu">
                 <IonHeader>
                     <IonToolbar color={this.props.toolbarColor ? this.props.toolbarColor : "primary"}>
                         <IonTitle>Menu</IonTitle>
@@ -33,6 +41,7 @@ class MainMenu extends Component<Props , State>{
                     </IonList>
                 </IonContent>
             </IonMenu>
+            </Aux>
         )
     }
 }

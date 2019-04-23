@@ -10,13 +10,16 @@ export interface PageState {
 
 interface MyRoutes extends PageState{
     thumbnail? : ImageBitmap | any,
-    icon? : any
+    icon? : any,
+    auth? : boolean,
+    signOut? : Function
 }
 
 export interface MyProps {
     back? : any,
     currentPath? : any,
-    enableToolbar? : any
+    enableToolbar? : any,
+    history? : any
 }
 
 export interface ArrayRoutes {
@@ -43,6 +46,16 @@ export interface Inputs {
     maxLength? : number,
     errorMessage? : string,
     error? : boolean
+}
+
+export interface Auth {
+    enableSignIn?: boolean,
+    enableSignUp?: boolean,
+    enableResetPassword?: boolean
+}
+
+export type MyContext = {
+    path : string
 }
 
 export default MyRoutes;
