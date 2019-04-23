@@ -1,6 +1,7 @@
 import React, { CSSProperties } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import {IonInput, IonItem, IonLabel} from '@ionic/react';
+import classes from './Inputs.css';
 
 const errorStyle : CSSProperties = {
     marginBottom: "20px",

@@ -17,12 +17,13 @@ interface State {
     enableSignUp? : boolean
 }
 
-const styleInput : CSSProperties = {
+var styleInput : CSSProperties = {
     borderBottom : "2px solid white",
     background : "transparent",
     color : "white",
     fontFamily : "Open Sans , sans-serif",
-    fontSize : "14px"
+    fontSize : "14px",
+    marginBottom : "20px"
 }
 
 class Main extends Component<Props , State>{
@@ -78,7 +79,7 @@ class Main extends Component<Props , State>{
         var email = SignUp.querySelector("#signUp").querySelector("input[name='email']");
         if(password.value !== confirmPassword.value){
             const newState: any = this.state.signUp.filter((val: Inputs, i: number) => {
-                return val.name === "password" || "confirmPassword"
+                return val.name === "confirmPassword"
             }).map((val: Inputs, i: number, arr: Inputs[]) => {
                 val.error = true;
                 val.value = "";
@@ -86,7 +87,7 @@ class Main extends Component<Props , State>{
                 return val;
             });
 
-            var mergeState = Object.assign(this.state.signUp, newState);
+            var mergeState = Object.assign(newState, this.state.signUp);
             return this.setState((prevState: any, props: any) => {
                 return {
                     signUp: mergeState
@@ -133,7 +134,7 @@ class Main extends Component<Props , State>{
                 return val;
             });
 
-            var mergeState = Object.assign(this.state.signIn , newState);
+            var mergeState = Object.assign(newState, this.state.signIn);
             return this.setState((prevState : any , props : any)=>{
                 return {
                     signIn : mergeState
@@ -148,7 +149,7 @@ class Main extends Component<Props , State>{
                 return val;
             });
 
-            var mergeState = Object.assign(this.state.signIn, elseNewState);
+            var mergeState = Object.assign(elseNewState, this.state.signIn);
             return this.setState((prevState: any, props: any) => {
                 return {
                     signIn: mergeState
