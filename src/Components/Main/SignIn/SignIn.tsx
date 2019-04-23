@@ -6,16 +6,20 @@ import classes from './SignIn.css';
 export interface Props {
     data? : any[],
     style? : CSSProperties,
-    enableSignIn? : any
+    enableSignIn? : any,
+    forgotPassword? : any
 }
 
 const SignIn : React.SFC<Props> = (props : any) => {
     return(
         <Aux>
             <div id="signIn" className={classes.SignInArea} style={props.style}>
+                <div>
+                    <a href="#" onClick={props.enableSignIn} className={classes.SignUpBack}>Haven't Sign Up Yet ? Sign Up Now !</a>
+                </div>
                 <InputElements data={props.data}/>
                 <div>
-                    <a href="#" onClick={props.enableSignIn} className={classes.SignBack}>Forgot Password ?</a>
+                    <a href="#" onClick={props.forgotPassword} className={classes.ForgotPassword}>Forgot Password ?</a>
                 </div>
             </div>
         </Aux>

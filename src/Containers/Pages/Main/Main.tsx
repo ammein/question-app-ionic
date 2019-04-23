@@ -22,8 +22,7 @@ const styleInput : CSSProperties = {
     background : "transparent",
     color : "white",
     fontFamily : "Open Sans , sans-serif",
-    fontSize : "14px",
-    marginBottom : "20px"
+    fontSize : "14px"
 }
 
 class Main extends Component<Props , State>{
@@ -41,13 +40,15 @@ class Main extends Component<Props , State>{
                     type: "password",
                     placeholder: "Password",
                     name: "password",
-                    style : styleInput
+                    style : styleInput,
+                    minLength : 6
                 },
                 {
                     type : "password",
                     name : "confirmPassword",
                     placeholder : "Confirm Password",
-                    style : styleInput
+                    style : styleInput,
+                    minLength : 6
                 }
             ],
             signIn : [
@@ -75,6 +76,23 @@ class Main extends Component<Props , State>{
         var password = SignUp.querySelector("#signUp").querySelector("input[name='password']");
         var confirmPassword = SignUp.querySelector("#signUp").querySelector("input[name='confirmPassword']");
         var email = SignUp.querySelector("#signUp").querySelector("input[name='email']");
+        if(password.value !== confirmPassword.value){
+            const newState: any = this.state.signUp.filter((val: Inputs, i: number) => {
+                return val.name === "password" || "confirmPassword"
+            }).map((val: Inputs, i: number, arr: Inputs[]) => {
+                val.error = true;
+                val.value = "";
+                val.errorMessage = "Password not match !";
+                return val;
+            });
+
+            var mergeState = Object.assign(this.state.signUp, newState);
+            return this.setState((prevState: any, props: any) => {
+                return {
+                    signUp: mergeState
+                }
+            })
+        }
         console.log("Running Sign Up Submit Handler")
     }
 
@@ -101,7 +119,43 @@ class Main extends Component<Props , State>{
         }
     }
 
+    forgotPassword = (e : any) =>{
+        e.preventDefault();
+        var SignIn = e.currentTarget.parentElement.parentElement.parentElement;
+        var email = SignIn.querySelector("#signIn").querySelector("input[name='email']");
+        if(email.value === ""){
+            const newState : any = this.state.signIn.filter((val : Inputs , i : number)=>{
+                return val.name === "email"
+            }).map((val : Inputs , i : number , arr : Inputs[])=>{
+                val.error = true;
+                val.value = email.value;
+                val.errorMessage = "You cannot leave empty email";
+                return val;
+            });
 
+            var mergeState = Object.assign(this.state.signIn , newState);
+            return this.setState((prevState : any , props : any)=>{
+                return {
+                    signIn : mergeState
+                }
+            })
+        }else{
+            const elseNewState: any = this.state.signIn.filter((val: Inputs, i: number) => {
+                return val.name === "email"
+            }).map((val: Inputs, i: number, arr: Inputs[]) => {
+                val.error = false;
+                val.value = email.value;
+                return val;
+            });
+
+            var mergeState = Object.assign(this.state.signIn, elseNewState);
+            return this.setState((prevState: any, props: any) => {
+                return {
+                    signIn: mergeState
+                }
+            })
+        }
+    }
 
     render() : any{
 
@@ -143,7 +197,7 @@ class Main extends Component<Props , State>{
             backgroundColor: "#78B7FF"
         }
 
-        var newStyle: CSSProperties = {
+        var animationStyle: CSSProperties = {
             animation: classes.button,
             animationDuration: "0.3s",
             animationIterationCount: 1,
@@ -152,19 +206,19 @@ class Main extends Component<Props , State>{
         }
 
         if(this.state.enableSignUp){
-            Object.assign(SignInStyle , newStyle);
+            Object.assign(SignInStyle , animationStyle);
+            SignUpBox.display = "block";
             SignUpBox.transform = "translateX(0px)";
             SignUpBox.opacity = 1;
-            SignUpBox.display = "block";
-            logoMergeArea.margin = "120px 0 95px 0";
+            logoMergeArea.margin = "50px 0 50px 0";
         }
 
         if(this.state.enableSignIn){
-            Object.assign(SignUpStyle, newStyle);
+            Object.assign(SignUpStyle, animationStyle);
+            SignInBox.display = "block";
             SignInBox.transform = "translateX(0px)";
             SignInBox.opacity = 1
-            SignInBox.display = "block";
-            logoMergeArea.margin = "120px 0px 160px";
+            logoMergeArea.margin = "50px 0px 50px";
         }
 
         return (
@@ -178,7 +232,7 @@ class Main extends Component<Props , State>{
                     </div>
                     <div className={classes.InputArea}>
                         <SignUp data={this.state.signUp} style={SignUpBox} enableSignUp={((e: any) => this.chooseLogin(e, "Sign In"))} />
-                        <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))} />
+                        <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))} forgotPassword={((e: any)=> this.forgotPassword(e))} />
                     </div>
                     <div className={classes.BottomBtnMain}>
                         <IonButtons>

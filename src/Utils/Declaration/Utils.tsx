@@ -40,7 +40,9 @@ export interface Inputs {
     min? : string,
     max? : string,
     minLength? : number,
-    maxLength? : number
+    maxLength? : number,
+    errorMessage? : string,
+    error? : boolean
 }
 
 export default MyRoutes;

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './Containers/App';
 import * as serviceWorker from './serviceWorker';
+import '@ionic/core';
 
 const startApp = () =>{
     ReactDOM.render(<App></App>, document.getElementById('root'));

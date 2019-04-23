@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import {IonInput, IonItem, IonLabel} from '@ionic/react';
 
+const errorStyle : CSSProperties = {
+    marginBottom: "20px",
+    color: "red",
+    fontSize: "12px"
+}
+
 
 const InputElements = ({data} : any) => {
+
+
     return(
         <Aux>
             {data.map((value : any , i : number , arr : any[])=>{
@@ -28,8 +36,10 @@ const InputElements = ({data} : any) => {
                             max={value.max ? value.max : undefined}
                             minlength={value.minlength ? value.minlength : undefined}
                             maxlength={value.maxLength ? value.maxLength : undefined} /> 
+                            {value.error ? <p style={errorStyle}>{value.errorMessage}</p> : null}
                         </IonItem>
                             : 
+                        <Aux key={i + value.type}>
                         <IonInput
                             key={i + value.type}
                             value={value.value ? value.value : ""}
@@ -46,6 +56,8 @@ const InputElements = ({data} : any) => {
                             max={value.max ? value.max : undefined}
                             minlength={value.minlength ? value.minlength : undefined}
                             maxlength={value.maxLength ? value.maxLength : undefined} />
+                            {value.error ? <p style={errorStyle}>{value.errorMessage}</p> : null}
+                        </Aux>
                     }
                     </Aux>
                 )
