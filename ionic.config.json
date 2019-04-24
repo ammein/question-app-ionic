@@ -1,0 +1,7 @@
+{
+  "name": "Question App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

@@ -1,4 +1,4 @@
-import React , { Component, CSSProperties, PureComponent } from 'react';
+import React , { CSSProperties, PureComponent } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import { IonImg, IonPage, IonButtons, IonButton, IonRippleEffect, IonIcon } from '@ionic/react';
 import classes from './Main.css';
@@ -9,12 +9,13 @@ import Content from '../../../HOC/Content/Content';
 import ResetPassword from '../../../Components/Main/ResetPassword/ResetPassword';
 import MyToast from '../../../Components/UI/Toast/Toast';
 import EmailVerification from '../../../Components/Main/EmailVerification/EmailVerification';
+import Logo from '../../../Assets/SVG/logo.svg';
 import _ from 'lodash';
 
 declare const firebase : any;
 
 interface Props {
-    
+
 }
 
 interface State extends Auth {
@@ -35,6 +36,9 @@ var styleInput : CSSProperties = {
 }
 
 class Main extends PureComponent<Props , State>{
+
+    private checkUser : any;
+
     constructor(props : Props){
         super(props);
         this.state = {
@@ -83,40 +87,21 @@ class Main extends PureComponent<Props , State>{
                 duration : 0
             }
         };
-    }
-    
-    componentDidUpdate(){
-        var user = firebase.auth().currentUser;
-        if(user && user.emailVerified){
-            return this.setState((prevState : any)=>{
-                return {
-                    enableEmailVerification : false
-                }
-            })
-        }else if(user && !user.emailVerified){
-            return this.setState((prevState: any) => {
-                return {
-                    enableEmailVerification: true
-                }
-            })
-        }else{
-            return this.setState((prevState: any) => {
-                return {
-                    enableEmailVerification: false
-                }
-            })
-        }
+
     }
 
     SignUpSubmitHandler = (e : any) =>{
         e.preventDefault();
-        var SignUp = e.currentTarget.parentElement.parentElement.parentElement;
-        var password = SignUp.querySelector("#signUp").querySelector("input[name='password']");
-        var confirmPassword = SignUp.querySelector("#signUp").querySelector("input[name='confirmPassword']");
-        var email = SignUp.querySelector("#signUp").querySelector("input[name='email']");
+        var SignUp : Element = e.currentTarget.parentElement.parentElement.parentElement;
+        var password = SignUp!.querySelector("#signUp")!.querySelector("input[name='password']") as HTMLInputElement;
+        var confirmPassword = SignUp!.querySelector("#signUp")!.querySelector("input[name='confirmPassword']") as HTMLInputElement;
+        var email = SignUp!.querySelector("#signUp")!.querySelector("input[name='email']") as HTMLInputElement;
         var react = this;
         if(password.value !== confirmPassword.value){
-            const newState: any = this.state.signUp.filter((val: Inputs, i: number) => {
+
+            // Get Specific confirmPassword value
+            const newState: any = this.state.signUp
+            .filter((val: Inputs, i: number) => {
                 return val.name === "confirmPassword"
             }).map((val: Inputs, i: number, arr: Inputs[]) => {
                 val.error = true;
@@ -124,6 +109,17 @@ class Main extends PureComponent<Props , State>{
                 return val;
             });
 
+            // Merge exisiting value to state
+            const allValue : any = this.state.signUp
+            .map((val : Inputs , i : number , arr : Inputs[])=>{
+                val.value = SignUp.querySelectorAll<HTMLInputElement>("#signUp input")[i].value;
+                return val;
+            });
+
+            // Merge
+            Object.assign(newState , allValue);
+
+            // Set State
             var mergeState = Object.assign(newState, this.state.signUp);
             return this.setState((prevState: any, props: any) => {
                 return {
@@ -165,7 +161,9 @@ class Main extends PureComponent<Props , State>{
                         toast: {
                             showToast: true,
                             message: errorMessage,
+                            position : "top",
                             duration: 2000,
+                            header : "ERROR :",
                             dismissHandler: (() => {
                                 react.setState({
                                     toast: {
@@ -196,7 +194,7 @@ class Main extends PureComponent<Props , State>{
                     message: errorMessage,
                     duration: 2000,
                     position : "top",
-                    header : "ERROR :",
+                    header : `ERROR ${errorCode} :`,
                     dismissHandler: (() => {
                         react.setState({
                             toast: {
@@ -287,7 +285,7 @@ class Main extends PureComponent<Props , State>{
                             }),
                             duration : 2000,
                             position : "top",
-                            header : "ERROR :"
+                            header: `ERROR :`
                         }
                     }
                 })
@@ -297,28 +295,34 @@ class Main extends PureComponent<Props , State>{
         }
     }
 
+    componentWillUnmount(){
+        clearTimeout(this.checkUser);
+    }
+
     componentDidMount(){
         var path : string = window.location.hash.length > 1 ? window.location.hash.replace("#" , "") : window.location.pathname;
-        var user = firebase.auth().currentUser;
-        if (user && user.emailVerified) {
-            return this.setState((prevState: any) => {
-                return {
-                    enableEmailVerification: false
-                }
-            })
-        } else if (user && !user.emailVerified) {
-            return this.setState((prevState: any) => {
-                return {
-                    enableEmailVerification: true
-                }
-            })
-        } else {
-            return this.setState((prevState: any) => {
-                return {
-                    enableEmailVerification: false
-                }
-            })
-        }
+        this.checkUser = setInterval(() => {
+            var user = firebase.auth().currentUser;
+            if (user && user.emailVerified) {
+                return this.setState((prevState: any) => {
+                    return {
+                        enableEmailVerification: false
+                    }
+                })
+            } else if (user && !user.emailVerified) {
+                return this.setState((prevState: any) => {
+                    return {
+                        enableEmailVerification: true
+                    }
+                })
+            } else {
+                return this.setState((prevState: any) => {
+                    return {
+                        enableEmailVerification: false
+                    }
+                })
+            }
+        }, 1000);
     }
 
     render() : any{
@@ -340,7 +344,7 @@ class Main extends PureComponent<Props , State>{
         }
 
         var logoMergeArea : CSSProperties = {
-            margin: "200px 0px 160px"
+
         };
 
         var SignInBox : CSSProperties;
@@ -382,7 +386,9 @@ class Main extends PureComponent<Props , State>{
             SignUpBox.display = "block";
             SignUpBox.transform = "translateX(0px)";
             SignUpBox.opacity = 1;
-            logoMergeArea.margin = "50px 0 50px 0";
+            logoMergeArea.margin = "40px 0 40px 0";
+            logoMergeArea.justifyContent = "flex-start";
+            logoMergeArea.minHeight = "auto";
         }
 
         if (this.state.enableSignIn && !this.state.enableResetPassword && !this.state.enableEmailVerification){
@@ -391,7 +397,9 @@ class Main extends PureComponent<Props , State>{
             SignInBox.display = "block";
             SignInBox.transform = "translateX(0px)";
             SignInBox.opacity = 1
-            logoMergeArea.margin = "50px 0px 50px";
+            logoMergeArea.margin = "40px 0px 40px 0";
+            logoMergeArea.justifyContent = "flex-start";
+            logoMergeArea.minHeight = "auto";
         }
 
         if (this.state.enableResetPassword || this.state.enableEmailVerification){
@@ -400,7 +408,9 @@ class Main extends PureComponent<Props , State>{
 
         return (
             <Aux>
-                <IonPage>
+                <IonPage style={{
+                    minHeight : "100vh"
+                }}>
                     <Content {...this.props}>
                     <IonButton 
                         color="light" 
@@ -413,7 +423,9 @@ class Main extends PureComponent<Props , State>{
                     </IonButton>
                     <MyToast toast={this.state.toast}/>
                     <div className={classes.LogoArea} style={logoMergeArea}>
-                        <IonImg src=""></IonImg>
+                        <IonImg src={Logo} style={{
+                            width : "50px"
+                        }}></IonImg>
                         <div className={classes.Title}>
                             <p>Question App</p>
                         </div>

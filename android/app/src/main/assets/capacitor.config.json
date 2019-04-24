@@ -1,0 +1,7 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "Question App",
+  "bundledWebRuntime": false,
+  "windowsAndroidStudioPath" : "D:\\Android\\Android Studio\\bin\\studio64.exe",
+  "webDir": "www"
+}
