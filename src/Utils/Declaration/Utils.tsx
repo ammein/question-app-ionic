@@ -1,4 +1,5 @@
 import React , { ComponentClass } from "react";
+import {ToastButton} from '@ionic/core';
 
 export interface PageState {
     path? : string,
@@ -49,13 +50,22 @@ export interface Inputs {
 }
 
 export interface Auth {
-    enableSignIn?: boolean,
-    enableSignUp?: boolean,
-    enableResetPassword?: boolean
+    signUp: Inputs[],
+    signIn: Inputs[]
 }
 
 export type MyContext = {
     path : string
+}
+
+export interface Toast{
+    showToast: boolean,
+    dismissHandler?: (e: CustomEvent<any>) => void,
+    message?: string,
+    duration?: number,
+    header? : string,
+    position?: "top" | "bottom" | "middle" | undefined,
+    buttons? : (string | ToastButton)[] | undefined
 }
 
 export default MyRoutes;

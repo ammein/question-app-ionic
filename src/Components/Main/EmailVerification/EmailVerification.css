@@ -1,0 +1,17 @@
+.VerificationArea {
+    display: flex;
+    flex-direction: column;
+    transition: margin 0.4s ease;
+}
+
+.TextArea {
+    margin: 172px 43px 0 43px;
+}
+
+.VerificationAreaText {
+    font-size: 25px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: -0.45px;
+}

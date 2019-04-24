@@ -27,7 +27,7 @@ class App extends Component<{} , State> {
   checkUser=()=>{
     var react = this;
     firebase.auth().onAuthStateChanged(function (user : any) {
-      if (user) {
+      if (user && user.emailVerified) {
         return react.setState({
           authenticated: true
         })
