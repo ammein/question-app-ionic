@@ -2,7 +2,7 @@ import React , { CSSProperties, PureComponent } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import { IonImg, IonPage, IonButtons, IonButton, IonRippleEffect, IonIcon } from '@ionic/react';
 import classes from './Main.css';
-import { Inputs, Auth, Toast } from '../../../Utils/Declaration/Utils';
+import { Inputs, Auth, Toast, MyUser, MyContext } from '../../../Utils/Declaration/Utils';
 import SignUp from '../../../Components/Main/SignUp/SignUp';
 import SignIn from '../../../Components/Main/SignIn/SignIn';
 import Content from '../../../HOC/Content/Content';
@@ -11,6 +11,7 @@ import MyToast from '../../../Components/UI/Toast/Toast';
 import EmailVerification from '../../../Components/Main/EmailVerification/EmailVerification';
 import Logo from '../../../Assets/SVG/logo.svg';
 import _ from 'lodash';
+import Context from '../../../HOC/Context/Context';
 
 declare const firebase : any;
 
@@ -23,7 +24,8 @@ interface State extends Auth {
     enableSignUp?: boolean,
     enableResetPassword?: boolean,
     enableEmailVerification? : boolean,
-    toast? : Toast
+    toast? : Toast,
+    user? : MyUser
 }
 
 var styleInput : CSSProperties = {
@@ -38,6 +40,8 @@ var styleInput : CSSProperties = {
 class Main extends PureComponent<Props , State>{
 
     private checkUser : any;
+
+    static contextType : any = Context;
 
     constructor(props : Props){
         super(props);
@@ -139,6 +143,7 @@ class Main extends PureComponent<Props , State>{
                         return react.setState({
                             toast: {
                                 showToast: true,
+                                position : "top",
                                 message: "Email verification cannot be send. Please try again",
                                 duration: 2000,
                                 header: "ERROR :",
@@ -205,7 +210,6 @@ class Main extends PureComponent<Props , State>{
                 }
             })
         });
-
     }
 
     chooseLogin = (e : any , custom? : string) =>{
@@ -231,8 +235,8 @@ class Main extends PureComponent<Props , State>{
 
     forgotPassword = (e : any) =>{
         e.preventDefault();
-        var SignIn = e.currentTarget.parentElement.parentElement.parentElement;
-        var email = SignIn.querySelector("#signIn").querySelector("input[name='email']");
+        var SignIn : HTMLElement = e.currentTarget.parentElement.parentElement.parentElement;
+        var email = SignIn!.querySelector("#signIn")!.querySelector("input[name='email']") as HTMLInputElement;
         var react = this;
         if(email.value === ""){
             const newState : any = this.state.signIn.filter((val : Inputs , i : number)=>{
@@ -290,9 +294,64 @@ class Main extends PureComponent<Props , State>{
                     }
                 })
             });
-
-
         }
+    }
+
+    continueVerified = (e : any , recheckUser : any) =>{
+        e.preventDefault();
+        var user = firebase.auth().currentUser;
+        var react = this;
+        user.reload().then(()=>{
+            if (user && user.emailVerified) {
+                console.log("Running Email Verified : \n", user);
+                this.setState({
+                    enableEmailVerification: false
+                });
+                this.context.recheckUser();
+                return;
+            } else if (user && !user.emailVerified) {
+                console.log("Running Email Not Verified : \n", user);
+                return this.setState({
+                    enableEmailVerification: true,
+                    toast: {
+                        showToast: true,
+                        message: "Are you sure you have verified your email address ?",
+                        header: "ERROR :",
+                        dismissHandler: (() => {
+                            react.setState((prevState: State) => {
+                                return {
+                                    toast: {
+                                        showToast: false
+                                    }
+                                }
+                            })
+                        }),
+                        duration: 2000,
+                        position: "top"
+                    }
+                })
+            }
+        }).catch((e : any)=>{
+            return this.setState({
+                enableEmailVerification: true,
+                toast: {
+                    showToast: true,
+                    message: e,
+                    header: "ERROR :",
+                    dismissHandler: (() => {
+                        react.setState((prevState: State) => {
+                            return {
+                                toast: {
+                                    showToast: false
+                                }
+                            }
+                        })
+                    }),
+                    duration: 2000,
+                    position: "top"
+                }
+            })
+        })
     }
 
     componentWillUnmount(){
@@ -304,19 +363,27 @@ class Main extends PureComponent<Props , State>{
         this.checkUser = setInterval(() => {
             var user = firebase.auth().currentUser;
             if (user && user.emailVerified) {
-                return this.setState((prevState: any) => {
+                this.setState((prevState: State) => {
                     return {
+                        user : {
+                            uid : user.uid,
+                            email : user.email,
+                            displayName : user.displayName,
+                            emailVerified : user.emailVerified
+                        },
                         enableEmailVerification: false
                     }
                 })
+                this.context.recheckUser();
+                return;
             } else if (user && !user.emailVerified) {
-                return this.setState((prevState: any) => {
+                return this.setState((prevState: State) => {
                     return {
                         enableEmailVerification: true
                     }
                 })
             } else {
-                return this.setState((prevState: any) => {
+                return this.setState((prevState: State) => {
                     return {
                         enableEmailVerification: false
                     }
@@ -343,9 +410,7 @@ class Main extends PureComponent<Props , State>{
             display : "none"
         }
 
-        var logoMergeArea : CSSProperties = {
-
-        };
+        var logoMergeArea : CSSProperties = {};
 
         var SignInBox : CSSProperties;
 
@@ -411,7 +476,9 @@ class Main extends PureComponent<Props , State>{
                 <IonPage style={{
                     minHeight : "100vh"
                 }}>
-                    <Content {...this.props}>
+                <Context.Provider value={{
+                    user : this.state.user
+                }}>
                     <IonButton 
                         color="light" 
                         fill="clear" 
@@ -439,7 +506,21 @@ class Main extends PureComponent<Props , State>{
                     <div className={classes.BottomBtnMain}>
                     {
                         this.state.enableEmailVerification ? 
-                        null
+                        <Context.Consumer>
+                            {(context : MyContext) => {
+                                return (
+                                    <IonButton
+                                        expand="full"
+                                        style={[BtnStyle, SignInStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
+                                        onClick={(e: any) => {
+                                            return this.continueVerified(e , context.recheckUser);
+                                        }}>
+                                        <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                        Continue
+                                    </IonButton>
+                                )
+                            }}
+                        </Context.Consumer>
                         :
                         this.state.enableResetPassword ? 
                         <IonButton
@@ -468,7 +549,7 @@ class Main extends PureComponent<Props , State>{
                         </IonButtons>
                     }
                     </div>
-                    </Content>
+                    </Context.Provider>
                 </IonPage>
             </Aux>
         )

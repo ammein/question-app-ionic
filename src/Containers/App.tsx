@@ -3,44 +3,50 @@ import Main from './Pages/Main/Main';
 import { IonApp, IonContent } from '@ionic/react';
 import Aux from '../HOC/Auxilliary/Auxilliary';
 import Layout from '../Components/Layout/Layout';
-
-var hashHistory = require("history").createHashHistory;
-
-const createHashHistory = hashHistory();
-
-declare var firebase : any;
+import Context from '../HOC/Context/Context';
+import { MyContext } from '../Utils/Declaration/Utils';
 
 interface State {
-  authenticated ? : boolean
+  authenticated : boolean,
+  checkAuth? : () => void
 }
 
-class App extends Component<{} , State> {
+declare const firebase : any;
+
+class App extends Component<{}, State> {
+
+  static contextType : any = Context;
+
+  private checkUser : any;
 
   constructor(props : any){
     super(props);
-
-    this.state = {
-      authenticated : false
+    this.checkUser = () => {
+      return this.setState((state: State) => {
+        return {
+          authenticated: true
+        }
+      })
     }
+    this.state = {
+      authenticated : false,
+      checkAuth : this.checkUser
+    };
   }
 
-  checkUser=()=>{
+  componentDidMount(){
     var react = this;
     firebase.auth().onAuthStateChanged(function (user : any) {
       if (user && user.emailVerified) {
         return react.setState({
-          authenticated: true
-        })
+          authenticated : true
+        });
       } else {
         return react.setState({
           authenticated: false
-        })
+        });
       }
     });
-  }
-
-  componentDidMount(){
-    this.checkUser();
   }
 
 
@@ -48,7 +54,15 @@ class App extends Component<{} , State> {
     return (
       <Aux>
       <IonApp>
-        {this.state.authenticated ? <Layout/> : <Main/>}
+            {this.state.authenticated ? 
+            <Layout /> 
+            : 
+            <Context.Provider value={{
+              recheckUser: this.state.checkAuth
+            }}>
+              <Main />
+            </Context.Provider>
+                }
       </IonApp>
       </Aux>
     );

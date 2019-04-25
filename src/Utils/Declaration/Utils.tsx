@@ -49,13 +49,22 @@ export interface Inputs {
     error? : boolean
 }
 
+export interface MyUser{
+    emailVerified : boolean,
+    displayName? : string,
+    uid : string,
+    email : string
+}
+
 export interface Auth {
     signUp: Inputs[],
     signIn: Inputs[]
 }
 
 export type MyContext = {
-    path : string
+    path? : string,
+    recheckUser? : (()=> void),
+    user? : MyUser
 }
 
 export interface Toast{
@@ -66,6 +75,29 @@ export interface Toast{
     header? : string,
     position?: "top" | "bottom" | "middle" | undefined,
     buttons? : (string | ToastButton)[] | undefined
+}
+
+export interface firebaseEmailVerification {
+    url : string | undefined,
+    iOS? : {
+        bundleId : string
+    },
+    android? : {
+        packageName : string,
+        installApp : boolean,
+        minimumVersion : string
+    },
+    handleCodeInApp : boolean,
+    dynamicLinkDomain? : string
+}
+
+export interface ConfigFirebase {
+    apiKey : string,
+    authDomain : string,
+    databaseURL : string,
+    projectId : string,
+    storageBucket : string,
+    messagingSenderId : string
 }
 
 export default MyRoutes;

@@ -2,10 +2,13 @@
     display: flex;
     flex-direction: column;
     transition: margin 0.4s ease;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .TextArea {
-    margin: 172px 43px 0 43px;
+    margin: 0 43px 0 43px;
 }
 
 .VerificationAreaText {
