@@ -5,9 +5,10 @@ import Aux from '../HOC/Auxilliary/Auxilliary';
 import Layout from '../Components/Layout/Layout';
 import Context from '../HOC/Context/Context';
 import { MyContext } from '../Utils/Declaration/Utils';
+import '../theme.css';
 
 interface State {
-  authenticated : boolean,
+  authenticated? : boolean,
   checkAuth? : () => void
 }
 
@@ -24,7 +25,7 @@ class App extends Component<{}, State> {
     this.checkUser = () => {
       return this.setState((state: State) => {
         return {
-          authenticated: true
+          authenticated: undefined
         }
       })
     }
@@ -53,8 +54,7 @@ class App extends Component<{}, State> {
   render() {
     return (
       <Aux>
-      <IonApp>
-            {this.state.authenticated ? 
+          {this.state.authenticated ? 
             <Layout /> 
             : 
             <Context.Provider value={{
@@ -62,8 +62,7 @@ class App extends Component<{}, State> {
             }}>
               <Main />
             </Context.Provider>
-                }
-      </IonApp>
+          }
       </Aux>
     );
   }

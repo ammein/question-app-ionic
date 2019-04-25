@@ -13,7 +13,7 @@ const SubMenu = (props : any) => {
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
                                 {value.link ?
                                     <Link to={value.path}>
-                                        <IonItem>
+                                        <IonItem class="ion-activatable">
                                             <IonRippleEffect type="unbounded"></IonRippleEffect>
                                             {value.thumbnail ?
                                                 <IonThumbnail slot="start">
@@ -34,7 +34,7 @@ const SubMenu = (props : any) => {
                                         </IonItem>
                                     </Link>
                                     :
-                                    <IonItem key={i} onClick={value.getLink ? ((e: any) => value.pushLink(e, value.getLink)) : undefined}>
+                                    <IonItem key={i} class="ion-activatable" onClick={value.getLink ? ((e: any) => value.pushLink(e, value.getLink)) : undefined}>
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">
@@ -60,7 +60,7 @@ const SubMenu = (props : any) => {
                         {
                             value.signOut ?
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
-                                    <IonItem key={i} onClick={value.signOut}>
+                                    <IonItem key={i} onClick={value.signOut} class="ion-activatable">
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">

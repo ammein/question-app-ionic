@@ -1,12 +1,16 @@
 import React , {useEffect , useState} from 'react';
 import MyRoutes from '../../Utils/Routes';
-import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonBackButton, IonButton, IonIcon } from '@ionic/react';
+import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonBackButton, IonButton, IonIcon, IonTitle } from '@ionic/react';
+
+interface MyState {
+    title? : string
+}
 
 const Header = (props : any) => {
 
-    const [state, setState] = useState({
+    const [state, setState] = useState<MyState>({
         title : ""
-    } as any)
+    })
 
     useEffect(() => {
       const title : string = (window.location.hash.length > 1) ? window.location.hash.replace("#" , "") : window.location.pathname;
@@ -40,6 +44,7 @@ const Header = (props : any) => {
                         </IonMenuButton>
                     }
                 </IonButtons>
+                <IonTitle>{state.title}</IonTitle>
             </IonToolbar>
         </IonHeader>
     );

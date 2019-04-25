@@ -29,7 +29,9 @@ class MainMenu extends Component<Props , State>{
     render(){
         return (
             <Aux>
-            <IonMenu type="push" side="start" contentId="main" swipeGesture={true} menuId="menu">
+            <IonMenu type="push" side="start" contentId="main" swipeGesture={true} style={{
+                color : "white"
+            }}>
                 <IonHeader>
                     <IonToolbar color={this.props.toolbarColor ? this.props.toolbarColor : "primary"}>
                         <IonTitle>Menu</IonTitle>

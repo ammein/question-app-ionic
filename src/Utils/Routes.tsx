@@ -1,5 +1,6 @@
 import MyRoutes from "./Declaration/Utils";
 import Main from "../Containers/Pages/Main/Main";
+import Home from "../Containers/Pages/Home/Home";
 
 declare const firebase : any;
 
@@ -8,7 +9,8 @@ const Routes : MyRoutes[] = [
         path : "/",
         menu : true,
         title : "Home",
-        exact : true
+        exact : true,
+        component : Home
     },
     {
         path : "/topics",

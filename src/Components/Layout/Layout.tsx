@@ -1,6 +1,6 @@
 import React , { Component } from 'react';
-import {Router, Route} from 'react-router-dom';
-import {IonSplitPane, IonPage, IonRouterOutlet} from '@ionic/react';
+import {Router, Route, Switch} from 'react-router-dom';
+import {IonSplitPane, IonPage, IonRouterOutlet , IonApp, IonContent} from '@ionic/react';
 import MainMenu from '../Menu/MainMenu';
 import MyRoutes from '../../Utils/Routes';
 import AllRoutes from '../../Utils/Declaration/Utils';
@@ -34,16 +34,18 @@ class Layout extends Component<Props , State>{
 
     render(){
         return (
-            <Router history={createHashHistory}>
-                <IonSplitPane contentId="main">
-                    <MainMenu />
-                        <IonPage id="main">
-                            <IonRouterOutlet>
-                                {this.renderPath()}
-                            </IonRouterOutlet>    
-                        </IonPage>
-                </IonSplitPane>
-            </Router>
+            <IonApp>
+                <Router history={createHashHistory}>
+                    <IonSplitPane contentId="main">
+                        <MainMenu />
+                            <IonContent id="main">
+                                <Switch>
+                                    {this.renderPath()} 
+                                </Switch>
+                            </IonContent>
+                    </IonSplitPane>
+                </Router>
+            </IonApp>
         )
     }
 }

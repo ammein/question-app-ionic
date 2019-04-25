@@ -473,9 +473,7 @@ class Main extends PureComponent<Props , State>{
 
         return (
             <Aux>
-                <IonPage style={{
-                    minHeight : "100vh"
-                }}>
+                <IonPage>
                 <Context.Provider value={{
                     user : this.state.user
                 }}>
@@ -497,7 +495,7 @@ class Main extends PureComponent<Props , State>{
                             <p>Question App</p>
                         </div>
                     </div>
-                    <div className={classes.InputArea}>
+                        <div style={this.state.enableSignIn || this.state.enableSignUp ? { margin: "0 0 80px 0"} : {margin : "0"}}>
                         <SignUp data={this.state.signUp} style={SignUpBox} enableSignUp={((e: any) => this.chooseLogin(e, "Sign In"))} />
                         <SignIn data={this.state.signIn} style={SignInBox} enableSignIn={((e: any) => this.chooseLogin(e, "Sign Up"))} forgotPassword={((e: any)=> this.forgotPassword(e))} />
                         {this.state.enableResetPassword ? <ResetPassword/> : null}
