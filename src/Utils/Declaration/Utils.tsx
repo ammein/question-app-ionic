@@ -1,4 +1,4 @@
-import React , { ComponentClass } from "react";
+import React , { ComponentClass, CSSProperties } from "react";
 import {ToastButton} from '@ionic/core';
 
 export interface PageState {
@@ -6,14 +6,19 @@ export interface PageState {
     component? : React.ComponentProps<any>
     menu? : boolean,
     title? : string,
-    exact? : boolean
+    exact? : boolean,
+    link? : boolean
 }
 
 interface MyRoutes extends PageState{
     thumbnail? : ImageBitmap | any,
+    style? : CSSProperties,
     icon? : any,
+    getLink? : string,
+    pushLink? : (e : any , value : any) => void,
     auth? : boolean,
-    signOut? : Function
+    autoHide? : true,
+    signOut? : (event : MouseEvent) => void
 }
 
 export interface MyProps {

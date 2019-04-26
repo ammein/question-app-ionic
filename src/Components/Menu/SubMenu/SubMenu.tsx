@@ -2,18 +2,24 @@ import React from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import { IonMenuToggle, IonItem, IonRippleEffect, IonThumbnail, IonImg, IonIcon, IonLabel } from '@ionic/react';
 import {Link} from 'react-router-dom';
+import classes from './SubMenu.css';
+import MyRoutes from '../../../Utils/Declaration/Utils';
 
-const SubMenu = (props : any) => {
+interface MyProps{
+    data : MyRoutes[]
+}
+
+const SubMenu = (props: MyProps) => {
     return(
         <Aux>
-            {props.data.map((value : any , i : number , arr : any[])=>{
+            {props.data!.map((value: MyRoutes, i: number, arr: MyRoutes[])=>{
                 return (
                     <Aux key={i}>
                         {value.menu && !value.signOut ? 
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
                                 {value.link ?
-                                    <Link to={value.path}>
-                                        <IonItem class="ion-activatable">
+                                    <Link to={value.path as any}>
+                                        <IonItem class={["ion-activatable", classes.MenuItem].join(' ')} lines="none" style={value.style as any}>
                                             <IonRippleEffect type="unbounded"></IonRippleEffect>
                                             {value.thumbnail ?
                                                 <IonThumbnail slot="start">
@@ -34,7 +40,7 @@ const SubMenu = (props : any) => {
                                         </IonItem>
                                     </Link>
                                     :
-                                    <IonItem key={i} class="ion-activatable" onClick={value.getLink ? ((e: any) => value.pushLink(e, value.getLink)) : undefined}>
+                                    <IonItem key={i} class={["ion-activatable", classes.MenuItem].join(' ')} lines="none" onClick={value.getLink ? ((e: any) => value!.pushLink!(e, value.getLink)) : undefined} style={value.style as any}>
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">
@@ -60,7 +66,7 @@ const SubMenu = (props : any) => {
                         {
                             value.signOut ?
                             <IonMenuToggle key={i} autoHide={value.autoHide ? true : false}>
-                                    <IonItem key={i} onClick={value.signOut} class="ion-activatable">
+                                    <IonItem key={i} onClick={value.signOut} class="ion-activatable" lines="none" style={value.style as any}>
                                         <IonRippleEffect type="unbounded"></IonRippleEffect>
                                         {value.thumbnail ?
                                             <IonThumbnail slot="start">

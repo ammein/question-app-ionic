@@ -10,7 +10,11 @@ const Routes : MyRoutes[] = [
         menu : true,
         title : "Home",
         exact : true,
-        component : Home
+        component : Home,
+        style : {
+            height : "105px",
+            display : "flex"
+        }
     },
     {
         path : "/topics",
@@ -41,7 +45,10 @@ const Routes : MyRoutes[] = [
             }).catch((e : any)=>{
                 console.log(e);
             })
-        })
+        }),
+        style : {
+            color: "var(--ion-color-danger)"
+        }
     }
 ];
 

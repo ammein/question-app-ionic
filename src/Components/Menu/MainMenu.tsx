@@ -5,6 +5,7 @@ import SubMenu from './SubMenu/SubMenu';
 import MyRoutes from '../../Utils/Routes';
 import Aux from '../../HOC/Auxilliary/Auxilliary';
 import context from '../../HOC/Context/Context';
+import classes from './MainMenu.css';
 
 interface Props extends MyProps {
     toolbarColor ? : string,
@@ -37,7 +38,7 @@ class MainMenu extends Component<Props , State>{
                         <IonTitle>Menu</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <IonContent>
+                    <IonContent class={classes.MenuContent}>
                     <IonList>
                         <SubMenu data={this.state.allRoutes}/>
                     </IonList>
