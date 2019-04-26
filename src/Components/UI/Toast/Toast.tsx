@@ -14,6 +14,7 @@ const toast : React.SFC<Props> = (props) => {
                 <IonToast
                     isOpen={props.toast.showToast}
                     onDidDismiss={props.toast.dismissHandler ? props.toast.dismissHandler : () => { }}
+                    color={props.toast.color ? props.toast.color : undefined}
                     message={props.toast.message}
                     duration={props.toast.duration}
                     position={props.toast.position}

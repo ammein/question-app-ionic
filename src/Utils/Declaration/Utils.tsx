@@ -79,7 +79,8 @@ export interface Toast{
     duration?: number,
     header? : string,
     position?: "top" | "bottom" | "middle" | undefined,
-    buttons? : (string | ToastButton)[] | undefined
+    buttons? : (string | ToastButton)[] | undefined,
+    color?: "primary" | "secondary" | "tertiary" | "success" | "warning" | "danger" | "light" | "medium" | "dark" 
 }
 
 export interface firebaseEmailVerification {
@@ -103,6 +104,10 @@ export interface ConfigFirebase {
     projectId : string,
     storageBucket : string,
     messagingSenderId : string
+}
+
+export interface Slider{
+    img : string | undefined
 }
 
 export default MyRoutes;

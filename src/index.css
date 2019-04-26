@@ -19,3 +19,12 @@ div#root{
   width: 100%;
   height: 100%;
 }
+
+ion-title{
+  font-weight: 300;
+  font-size: 21px;
+}
+
+.md, .ios ion-toast .toast-button {
+  color : white !important;
+}

@@ -63,6 +63,10 @@
   --ion-color-light-tint: #f8ffff;
 }
 
+:global(.toast-button) {
+  color: white;
+}
+
 /* Global Variables */
 
 /* Set variables for all modes */
@@ -71,6 +75,8 @@
   --ion-background-color: #203145;
 
   --ion-text-color: #F7FFFF;
+
+  --ion-button-color : var(--ion-color-light);
 
   /* Set the font family of the entire app */
   --ion-font-family: "Open Sans",

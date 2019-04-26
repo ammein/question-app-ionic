@@ -167,7 +167,7 @@ class Main extends PureComponent<Props , State>{
                             showToast: true,
                             message: errorMessage,
                             position : "top",
-                            duration: 2000,
+                            duration: 5000,
                             header : "ERROR :",
                             dismissHandler: (() => {
                                 react.setState({
@@ -197,9 +197,9 @@ class Main extends PureComponent<Props , State>{
                 toast: {
                     showToast: true,
                     message: errorMessage,
-                    duration: 2000,
                     position : "top",
                     header : `ERROR ${errorCode} :`,
+                    duration : 5000,
                     dismissHandler: (() => {
                         react.setState({
                             toast: {
@@ -509,6 +509,7 @@ class Main extends PureComponent<Props , State>{
                                 return (
                                     <IonButton
                                         expand="full"
+                                        color="secondary"
                                         style={[BtnStyle, SignInStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
                                         onClick={(e: any) => {
                                             return this.continueVerified(e , context.recheckUser);
@@ -523,6 +524,7 @@ class Main extends PureComponent<Props , State>{
                         this.state.enableResetPassword ? 
                         <IonButton
                             expand="full"
+                            color="secondary"
                             style={[BtnStyle, SignInStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
                             onClick={(e : any) => this.chooseLogin(e)}>
                             <IonRippleEffect type="unbounded"></IonRippleEffect>

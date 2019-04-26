@@ -6,6 +6,7 @@ import Layout from '../Components/Layout/Layout';
 import Context from '../HOC/Context/Context';
 import { MyContext } from '../Utils/Declaration/Utils';
 import '../theme.css';
+import Loading from '../Components/Loading/Loading';
 
 interface State {
   authenticated? : boolean,
@@ -25,12 +26,12 @@ class App extends Component<{}, State> {
     this.checkUser = () => {
       return this.setState((state: State) => {
         return {
-          authenticated: undefined
+          authenticated: true
         }
       })
     }
     this.state = {
-      authenticated : false,
+      authenticated : undefined,
       checkAuth : this.checkUser
     };
   }
@@ -52,17 +53,30 @@ class App extends Component<{}, State> {
 
 
   render() {
+
+    var render : any;
+
+    if(this.state.authenticated === undefined){
+      render = (
+        <Loading stateStop={this.state.authenticated} dissapear={this.state.authenticated} />
+      )
+    }else if(this.state.authenticated === false){
+      render = (
+        <Context.Provider value={{
+          recheckUser: this.state.checkAuth
+        }}>
+          <Main />
+        </Context.Provider>
+      )
+    }else if(this.state.authenticated === true){
+      render = (
+        <Layout /> 
+      )
+    }
+
     return (
       <Aux>
-          {this.state.authenticated ? 
-            <Layout /> 
-            : 
-            <Context.Provider value={{
-              recheckUser: this.state.checkAuth
-            }}>
-              <Main />
-            </Context.Provider>
-          }
+          {render}
       </Aux>
     );
   }

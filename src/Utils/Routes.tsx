@@ -1,6 +1,7 @@
 import MyRoutes from "./Declaration/Utils";
 import Main from "../Containers/Pages/Main/Main";
 import Home from "../Containers/Pages/Home/Home";
+import Profile from "../Containers/Pages/Profile/Profile";
 
 declare const firebase : any;
 
@@ -11,10 +12,18 @@ const Routes : MyRoutes[] = [
         title : "Home",
         exact : true,
         component : Home,
+        link : true,
         style : {
             height : "105px",
             display : "flex"
         }
+    },
+    {
+        path : "/profile",
+        menu : true,
+        title : "Profile",
+        component : Profile,
+        link : true
     },
     {
         path : "/topics",
@@ -47,7 +56,7 @@ const Routes : MyRoutes[] = [
             })
         }),
         style : {
-            color: "var(--ion-color-danger)"
+            color: "var(--ion-color-secondary)"
         }
     }
 ];
