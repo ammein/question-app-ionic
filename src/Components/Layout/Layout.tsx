@@ -49,6 +49,7 @@ class Layout extends Component<Props , State>{
         var react = this;
         firebase.auth().onAuthStateChanged(function (user: any) {
             if (user && user.emailVerified) {
+                console.log("Running OAuthStateChanged");
                 react.setState((prevState: State) => {
                     return {
                         user: {

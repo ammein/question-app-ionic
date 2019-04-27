@@ -42,7 +42,7 @@ export interface Inputs {
     disabled? : boolean,
     readonly? : boolean,
     placeholder? : string,
-    onChange? : ((e : any) => void),
+    onChange? : ((e : CustomEvent<any>) => void),
     name : string,
     style? : any,
     required? :boolean,
@@ -56,11 +56,15 @@ export interface Inputs {
     itemStyle? : string
 }
 
-export interface MyUser{
+export interface MyUser extends IndexMyUser{
     emailVerified : boolean,
     displayName? : string,
     uid : string,
     email : string
+}
+
+interface IndexMyUser{
+    [key: string] : any
 }
 
 export interface Auth {
