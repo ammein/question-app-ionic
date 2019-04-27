@@ -2,9 +2,10 @@ import React, { CSSProperties } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import InputElements from '../../UI/Inputs/Inputs';
 import classes from './SignUp.css';
+import {Inputs} from '../../../Utils/Declaration/Utils';
 
 interface Props {
-    data? : any[],
+    data : Inputs[],
     style? : CSSProperties,
     enableSignUp? : any
 }

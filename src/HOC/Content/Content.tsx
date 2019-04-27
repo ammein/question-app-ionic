@@ -26,7 +26,9 @@ class Content extends Component<Props , State>{
                 {this.props.enableContent ? 
                     <Aux>
                         <Header back={this.props.back} currentPath={this.props.currentPath} enableToolbar={this.props.enableToolbar} />
-                        <IonContent scrollEvents={true} fullscreen={true}>
+                        <IonContent scrollEvents={true} fullscreen={true} style={{
+                            "--background" : "var(--ion-color-primary)"
+                        }}>
                             {this.props.children}
                         </IonContent>
                     </Aux>

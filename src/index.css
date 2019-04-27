@@ -21,10 +21,6 @@ div#root{
 }
 
 ion-title{
-  font-weight: 300;
+  font-weight: 700;
   font-size: 21px;
-}
-
-.md, .ios ion-toast .toast-button {
-  color : white !important;
 }

@@ -34,15 +34,15 @@ export interface ArrayRoutes {
 
 export interface Inputs {
     enableLabel? : boolean,
-    type: string,
-    position? : string,
+    type: "number" | "time" | "email" | "time" | "password" | "date" | "search" | "tel" | "url" | "text",
+    position? : "fixed" | "stacked" | "floating",
     label? : string,
     value? : any,
     clearInput? : boolean,
     disabled? : boolean,
     readonly? : boolean,
     placeholder? : string,
-    onChange? : void,
+    onChange? : ((e : any) => void),
     name : string,
     style? : any,
     required? :boolean,
@@ -51,7 +51,9 @@ export interface Inputs {
     minLength? : number,
     maxLength? : number,
     errorMessage? : string,
-    error? : boolean
+    error? : boolean,
+    line? : "full" | "inset" | "none",
+    itemStyle? : string
 }
 
 export interface MyUser{

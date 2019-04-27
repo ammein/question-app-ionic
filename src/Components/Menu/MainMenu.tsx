@@ -34,7 +34,9 @@ class MainMenu extends Component<Props , State>{
                 color : "white"
             }}>
                 <IonHeader>
-                    <IonToolbar color={this.props.toolbarColor ? this.props.toolbarColor : "primary"}>
+                    <IonToolbar style={this.props.toolbarColor ? {
+                        "--background" : `var(--ion-color-${this.props.toolbarColor})`
+                    } : undefined}>
                         <IonTitle>Menu</IonTitle>
                     </IonToolbar>
                 </IonHeader>
