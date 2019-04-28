@@ -1,4 +1,5 @@
 .Popover{
     --background : var(--ion-color-primary);
     color : var(--ion-color-light);
+    --max-width : 400px;
 }

@@ -5,6 +5,7 @@ import classes from './Popover.css';
 
 interface PopOverProps{
     open : boolean,
+    backdropDismiss : boolean,
     dismissHandler? : ((e ?: any) => void),
     children : any
 }
@@ -14,6 +15,7 @@ const popover = (props: PopOverProps) => {
         <IonPopover
         isOpen={props.open}
         showBackdrop={props.open}
+        backdropDismiss={props.backdropDismiss}
         cssClass={classes.Popover}
         onDidDismiss={props.dismissHandler ? props.dismissHandler : () => {}}>
             <Aux>
