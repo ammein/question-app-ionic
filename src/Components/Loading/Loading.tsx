@@ -22,6 +22,7 @@ const loading = (props: Props) => {
 
     const dissapear : CSSProperties = {
         opacity : 0,
+        display : "none",
         transition : "all 1s ease"
     }
 

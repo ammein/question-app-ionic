@@ -19,6 +19,9 @@ interface State {
 }
 
 class Layout extends Component<Props , State>{
+
+    private interval : any;
+
     constructor(props : Props){
         super(props);
         this.state = {
@@ -44,43 +47,19 @@ class Layout extends Component<Props , State>{
             }
         })
     }
-
-    componentDidMount(){
-        var react = this;
-        firebase.auth().onAuthStateChanged(function (user: any) {
-            if (user && user.emailVerified) {
-                console.log("Running OAuthStateChanged");
-                react.setState((prevState: State) => {
-                    return {
-                        user: {
-                            displayName: user.displayName,
-                            email: user.email,
-                            emailVerified: user.emailVerified,
-                            uid: user.uid
-                        }
-                    }
-                })
-            }
-        });
-    }
-
     render(){
         return (
             <IonApp>
-                <Context.Provider value={{
-                    user : this.state.user
-                }}>
-                    <Router history={createHashHistory}>
-                        <IonSplitPane contentId="main">
-                            <MainMenu />
-                                <IonContent id="main">
-                                    <Switch>
-                                        {this.renderPath()} 
-                                    </Switch>
-                                </IonContent>
-                        </IonSplitPane>
-                    </Router>
-                </Context.Provider>
+                <Router history={createHashHistory}>
+                    <IonSplitPane contentId="main">
+                        <MainMenu />
+                            <IonContent id="main">
+                                <Switch>
+                                    {this.renderPath()} 
+                                </Switch>
+                            </IonContent>
+                    </IonSplitPane>
+                </Router>
             </IonApp>
         )
     }

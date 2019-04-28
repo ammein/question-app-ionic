@@ -1,17 +1,20 @@
 import React , { Component , CSSProperties } from 'react';
 import Content from '../../../HOC/Content/Content';
 import InputElements from '../../../Components/UI/Inputs/Inputs';
-import {Inputs, MyContext, MyUser, Toast} from '../../../Utils/Declaration/Utils';
-import { IonButton, IonToast } from '@ionic/react';
+import {Inputs, Toast} from '../../../Utils/Declaration/Utils';
+import { IonButton, IonToast, IonPopover } from '@ionic/react';
 import context from '../../../HOC/Context/Context';
 import MyToast from '../../../Components/UI/Toast/Toast';
-import {isEqual} from 'lodash'
+import Loading from '../../../Components/Loading/Loading';
+import Popover from '../../../Components/UI/Popover/Popover';
+import Aux from '../../../HOC/Auxilliary/Auxilliary';
 
 interface Props {}
     
 interface State {
     profile : Inputs[],
-    toast : Toast
+    toast : Toast,
+    saving : boolean
 }
 
 var styleInput: CSSProperties = {
@@ -27,8 +30,7 @@ declare const firebase : any;
 
 class Profile extends Component<Props , State>{
 
-    static contextType = context;
-    context! : React.ContextType<typeof context>
+    private newEmail : string | undefined;
 
     constructor(props : Props){
         super(props)
@@ -64,79 +66,23 @@ class Profile extends Component<Props , State>{
             ],
             toast : {
                 showToast : false
-            }
-        }
-    }
-
-    shouldComponentUpdate(nextProps : Props, nextState : State, nextContext : MyContext){
-        // console.log("Props : ",nextProps);
-        // console.log("State : ", nextState);
-        // console.log("Next Context : ", nextContext);
-        if(
-            nextState.profile ||
-            nextState.toast.dismissHandler !== this.state.toast.dismissHandler ||
-            nextState.toast.showToast !== this.state.toast.showToast ||
-            nextState.toast.header !== this.state.toast.header ||
-            nextState.toast.message !== this.state.toast.message ||
-            nextState.toast.position !== this.state.toast.position ||
-            nextState.toast.duration !== this.state.toast.duration ||
-            nextContext.user!.displayName !== this.context.user!.displayName ||
-            nextContext.user!.email !== this.context.user!.email ||
-            nextContext.user!.emailVerified !== this.context.user!.emailVerified ||
-            nextContext.user!.uid !== this.context.user!.uid
-            )
-            {
-            nextState.profile.forEach((val: Inputs, i: number, arr: Inputs[]) => {
-                if (
-                    val.value !== this.state.profile[i].value
-                ) {
-                    // console.log("Running True" , arr[i]);
-                    return true
-                } else {
-                    // console.log("Running False" , arr[i]);
-                    return false
-                }
-            })
-                return true;
-            }
-            else{
-                return false;
-            }
-    }
-
-    componentDidUpdate(prevProps : Props , prevState : State){
-        console.log("Running Component Did Update")
-        var react = this;
-        if(this.context.user){
-            Object.keys(this.context.user).map((userKey: string, i: number, users: string[])=>{
-                Object.values(this.state.profile).map((profile: Inputs, i: number, profiles : Inputs[])=>{
-                    if(userKey === profile.name && this.context.user![userKey] !== this.state.profile[i].value){
-                        react.setState((prevState : State)=>{
-                            console.log("State profile", this.state.profile[i].value);
-                            console.log("PrevState profile", prevState.profile[i].value);
-                            const updatedProfile = [...prevState.profile];
-                            updatedProfile[i].value = this.context.user![userKey];
-                            return {
-                                profile: updatedProfile
-                            }
-                        })
-                    }
-                })
-            })
+            },
+            saving : false
         }
     }
 
     componentDidMount(){
         console.log("Running Component Did Mount");
-        if (this.context.user) {
-            var userProfile = this.state.profile;
-            var convertUser: MyUser = this.context.user;
-            var updatedUserProfile = [
-                ...this.state.profile
-            ];
-            Object.values(userProfile).map((val: Inputs, i: number, arr: Inputs[]) => {
-                if (this.state.profile[i].name === convertUser[val.name]) {
-                    updatedUserProfile[i].value = Object.values(convertUser)[i];
+        var user = firebase.auth().currentUser;
+        var userProfile = this.state.profile;
+        var updatedUserProfile = [
+            ...this.state.profile
+        ];
+
+        user.reload().then(()=>{
+            this.state.profile.forEach((val : Inputs , i : number , arr : Inputs[])=>{
+                if(user[val.name] && user[val.name] !== val.value){
+                    updatedUserProfile[i].value = user[val.name];
                     return this.setState((prevState: State) => {
                         return {
                             profile: updatedUserProfile
@@ -144,7 +90,7 @@ class Profile extends Component<Props , State>{
                     })
                 }
             })
-        }
+        })
     }
 
     submitHandler = (e : CustomEvent<any>) =>{
@@ -173,58 +119,22 @@ class Profile extends Component<Props , State>{
             else if (val.name === "email"){
                 // console.log("Updated Profile : \n" , updatedProfile);
                 console.log("Updated Value ", val.value);
-                this.context.user![val.name] = val.value;
                 updatedProfile[i].value = val.value;
-                return react.setState((prevState: State, props: Props) => {
-                    return {
-                        profile: updatedProfile
-                    }
-                }, function () {
-                    console.log("State After : ", react.state.profile)
-                    user.updateEmail(val.value).then(() => {
-                        return react.setState({
-                            toast: {
-                                showToast: true,
-                                duration: 2000,
-                                message: "You have successfully update email address",
-                                header: "SUCCESS !",
-                                dismissHandler: (() => {
-                                    return react.setState({
-                                        toast: {
-                                            showToast: false
-                                        }
-                                    })
-                                })
-                            }
-                        })
-                    }).catch((e: any) => {
-                        debugger;
-                        return react.setState({
-                            toast: {
-                                showToast: true,
-                                duration: 2000,
-                                message: e.message,
-                                header: "ERROR !",
-                                dismissHandler: (() => {
-                                    return react.setState({
-                                        toast: {
-                                            showToast: false
-                                        }
-                                    })
-                                })
-                            }
-                        })
-                    })
-                });
+                react.setState({
+                    saving : true,
+                    profile : updatedProfile
+                },function(){
+                        react.newEmail = val.value;
+                })
             }
             else if(val.value){
                 console.log("Updated Value ", val.value);
-                this.context.user![val.name] = val.value;
                 updatedProfile[i].value = val.value;
                 // console.log("Updated Profile : \n" , updatedProfile);
                 return react.setState((prevState : State , props : Props)=>{
                     return {
-                        profile: updatedProfile
+                        profile: updatedProfile,
+                        saving : true
                     }
                 }, function(){
                     console.log("State After : ", react.state.profile)
@@ -232,6 +142,7 @@ class Profile extends Component<Props , State>{
                         [val.name]: val.value
                     }).then(() => {
                         return react.setState({
+                            saving : false,
                             toast: {
                                 showToast: true,
                                 duration: 2000,
@@ -249,6 +160,7 @@ class Profile extends Component<Props , State>{
                     }).catch((e: any) => {
                         debugger;
                         return react.setState({
+                            saving: false,
                             toast: {
                                 showToast: true,
                                 duration: 2000,
@@ -269,7 +181,78 @@ class Profile extends Component<Props , State>{
         });
     }
 
-    render(){
+    updateEmail = (email : string ,password : string) =>{
+        var user = firebase.auth().currentUser;
+        var react = this;
+        // Credential
+        var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
+        user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
+            return react.setState((prevState: State, props: Props) => {
+                return {
+                    saving: true
+                }
+            }, function () {
+                console.log("State After : ", react.state.profile)
+                if (react.state.saving) {
+                    user.updateEmail(email).then(() => {
+                        return react.setState({
+                            saving: false,
+                            toast: {
+                                showToast: true,
+                                duration: 2000,
+                                message: "You have successfully update email address",
+                                header: "SUCCESS !",
+                                dismissHandler: (() => {
+                                    return react.setState({
+                                        toast: {
+                                            showToast: false
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                    }).catch((e: any) => {
+                        debugger;
+                        return react.setState({
+                            saving: false,
+                            toast: {
+                                showToast: true,
+                                duration: 2000,
+                                message: e.message,
+                                header: "ERROR !",
+                                dismissHandler: (() => {
+                                    return react.setState({
+                                        toast: {
+                                            showToast: false
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                    })
+                }
+            });
+        }).catch(function (error : any) {
+            return react.setState({
+                saving: true,
+                toast: {
+                    showToast: true,
+                    duration: 2000,
+                    message: error.message,
+                    header: "ERROR :",
+                    dismissHandler: (() => {
+                        return react.setState({
+                            toast: {
+                                showToast: false
+                            }
+                        })
+                    })
+                }
+            })
+        });
+    }
+
+    render() : any{
 
         const buttonStyle : any = {
             "--background": "var(--ion-color-secondary)",
@@ -277,8 +260,63 @@ class Profile extends Component<Props , State>{
             padding : "0 15px"
         } as CSSProperties;
 
+        var Saving : JSX.Element;
+
+        if(this.state.saving){
+            Saving = (
+                <Aux>
+                    <Loading dissapear={false} stateStop={false}/>
+                </Aux>
+            )
+        }else{
+            Saving = (
+                <Aux>
+                <Loading dissapear={true} stateStop={true}/>
+                </Aux>
+            )
+        }
+
         return (
             <Content enableContent={true} enableToolbar={true}>
+                {Saving}
+                <Popover
+                    open={this.state.saving}
+                    dismissHandler={(() => {
+                        this.setState((prevState: State) => {
+                            return {
+                                saving: false
+                            }
+                        })
+                    })}>
+                    <form>
+                        <InputElements data={[
+                            {
+                                name: "confirmPassword",
+                                type: "password",
+                                placeholder: "Re-enter your password to confirm",
+                                required: true
+                            }
+                        ]} />
+                        <IonButton
+                            style={{
+                                "--background": "var(--ion-color-secondary)",
+                                margin: "0"
+                            }}
+                            type="submit"
+                            onClick={((e: any) => {
+                                e.preventDefault();
+                                var password: string;
+                                password = e.currentTarget.parentElement.querySelector("input[name='confirmPassword']").value;
+                                if (this.newEmail) {
+                                    this.updateEmail(this.newEmail, password);
+                                    this.newEmail = undefined;
+                                    return;
+                                }
+                            })}>
+                            Confirm
+                            </IonButton>
+                    </form>
+                </Popover>
                 <MyToast toast={this.state.toast}/>
                 <form method="post" onSubmit={((e : any)=> this.submitHandler(e))}>
                     <InputElements data={this.state.profile}/>
