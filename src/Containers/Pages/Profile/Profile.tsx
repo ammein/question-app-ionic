@@ -246,7 +246,7 @@ class Profile extends Component<Props , State>{
                 toast: {
                     showToast: true,
                     duration: 2000,
-                    message: "Please verify your new email address",
+                    message: "Please verify your new email address \n Email : " + email,
                     header: "ATTENTION !",
                     dismissHandler: (() => {
                         return react.setState({
@@ -293,23 +293,24 @@ class Profile extends Component<Props , State>{
     }
 
     masterPopover = (func : (e : any)=> void) =>{
+        var style : any = {
+            textAlign : "center",
+            padding : "5px",
+            lineHeight : "20px"
+        } as CSSProperties;
         return (
             <form>
                 {this.state.saveEmail ? 
-                <p style={{
-                    textAlign : "center"
-                }}>Enter Your Password to confirm your <span style={{
+                <p style={style}>Enter Your Password to confirm your <span style={{
                     textDecoration : "underline"
                 }}>new email</span> changes</p>
                 :
                 this.state.savePassword ?
-                    <p style={{
-                        textAlign: "center"
-                    }}>Enter Your Password to confirm your <span style={{
-                        textDecoration : "underline"
-                    }}>new password</span> changes</p>
-                    :
-                    null
+                <p style={style}>Enter Your Password to confirm your <span style={{
+                    textDecoration : "underline"
+                }}>new password</span> changes</p>
+                :
+                null
                 }
                 <InputElements data={[
                     {
@@ -328,10 +329,12 @@ class Profile extends Component<Props , State>{
                             "--background": "var(--ion-color-medium)",
                             margin: "0",
                             flex: "1",
-                            color : "var(--ion-color-primary)"
+                            color : "var(--ion-color-primary)",
+                            height : "50px"
                         }}
                         expand="full"
-                        type="submit"
+                        size="large"
+                        type="button"
                         onClick={(e: any) => {
                             e.preventDefault();
                             return this.setState((prevState: State) => {
@@ -348,10 +351,12 @@ class Profile extends Component<Props , State>{
                         style={{
                             "--background": "var(--ion-color-secondary)",
                             margin: "0",
-                            flex : "1"
+                            flex : "1",
+                            height : "50px"
                         }}
                         expand="full"
-                        type="submit"
+                        size="large"
+                        type="button"
                         onClick={(e: any) => func(e)}>
                             Confirm
                     </IonButton>
@@ -393,7 +398,7 @@ class Profile extends Component<Props , State>{
                     {this.masterPopover((e: any) => {
                         e.preventDefault();
                         var password: string;
-                        password = e.currentTarget.parentElement.querySelector("input[name='confirmPassword']").value;
+                        password = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
                         return this.updateEmail(this.state.newEmail, password);
                     })}
                 </Popover>
@@ -403,7 +408,7 @@ class Profile extends Component<Props , State>{
                     {this.masterPopover((e: any) => {
                         e.preventDefault();
                         var password: string;
-                        password = e.currentTarget.parentElement.querySelector("input[name='confirmPassword']").value;
+                        password = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
                         return this.updatePassword(this.state.newPassword, password);
                     })}
                 </Popover>
