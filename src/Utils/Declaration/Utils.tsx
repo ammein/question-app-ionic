@@ -19,7 +19,13 @@ interface MyRoutes extends PageState{
     auth? : boolean,
     autoHide? : true,
     signOut? : (event : MouseEvent) => void,
-    childrenComponent ? : MyRoutes[]
+    enableSegment? : true,
+    childrenComponent ? : ChildrenRoutes[],
+    segment? :boolean
+}
+
+export interface ChildrenRoutes extends MyRoutes{
+    parent? : string
 }
 
 export interface MyProps {

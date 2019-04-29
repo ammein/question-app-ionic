@@ -73,8 +73,7 @@ class Home extends Component<Props , State>{
         return (
             <Aux>
                 <Content {...this.props} 
-                enableContent={true}
-                enableToolbar={true}>
+                enableContent={true}>
                     <MySlider data={this.state.slider} style={{
                         height : "200px"
                     }}/>

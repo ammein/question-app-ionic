@@ -37,17 +37,23 @@ const Routes : MyRoutes[] = [
                 path: "/:id/description",
                 menu: false,
                 title: "Description",
-                component : Description
+                component : Description,
+                enableSegment : true,
+                segment: true,
             },
             {
                 path: "/:id/notes",
                 menu: false,
-                title: "Notes"
+                title: "Notes",
+                enableSegment: true,
+                segment: true,
             },
             {
                 path: "/:id/questions",
                 menu: false,
-                title: "Questions"
+                title: "Questions",
+                enableSegment: true,
+                segment: true,
             },
         ]
     },

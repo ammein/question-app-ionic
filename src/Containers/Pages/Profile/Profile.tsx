@@ -394,7 +394,7 @@ class Profile extends Component<Props , State>{
         return (
             <Aux>
             {Saving}
-            <Content enableContent={true} enableToolbar={true}>
+            <Content enableContent={true}>
                 <Popover
                     open={this.state.saveEmail}
                     backdropDismiss={false}>

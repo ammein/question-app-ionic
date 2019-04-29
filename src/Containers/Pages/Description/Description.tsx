@@ -15,10 +15,7 @@ class Description extends Component<Props , State>{
     }
 
     componentDidMount(){
-        console.log("Param Description" , this.props.match)
-        console.log("State Location" , this.props.location)
-        console.log("Description" , this.constructor)
-        console.log("Get Path Description" , getPath(this.constructor))
+        console.log("Param Description" , this.props)
     }
 
     render(){

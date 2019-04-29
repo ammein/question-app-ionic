@@ -40,17 +40,17 @@ class Topics extends Component<Props , State>{
     render(){
         return (
             <Aux>
-                <Content enableContent={true} enableToolbar={true} {...this.props} currentPath={getPath(this.constructor)} back={true} getTitle={getTitle(this.constructor).title} goBack={()=>{
-                    var react = this;
-                    this.setState({
-                        nested : false
-                    },function(){
-                        return react.props.history.goBack();
-                    })
-                }}>
-                <p>{this.props.match.params.id}</p>
                 {!this.state.nested ? 
                 <Aux>
+                        <Content enableContent={true} enableToolbar={true} {...this.props} currentPath={getPath(this.constructor)} back={true} goBack={() => {
+                            var react = this;
+                            this.setState({
+                                nested: false
+                            }, function () {
+                                return react.props.history.goBack();
+                            })
+                        }}>
+                            <p>{this.props.match.params.id}</p>
                         <p>Hey !</p>
                         <IonButton
                             onClick={((e: any) => {
@@ -67,12 +67,22 @@ class Topics extends Component<Props , State>{
                             })}>
                             Go To Description
                     </IonButton>
+                        </Content>
                 </Aux>
                     :
-                    null
-                }
+                    <Content enableContent={true} enableToolbar={true} {...this.props} currentPath={getPath(this.constructor)} back={true} goBack={() => {
+                            var react = this;
+                            this.setState({
+                                nested: false
+                            }, function () {
+                                return react.props.history.push({
+                                    pathname : "/"
+                                })
+                            })
+                        }}>
                     {this.props.children}
-                </Content>
+                    </Content>
+                }
             </Aux>
         )
     }
