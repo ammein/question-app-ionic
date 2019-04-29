@@ -18,14 +18,17 @@ interface MyRoutes extends PageState{
     pushLink? : (e : any , value : any) => void,
     auth? : boolean,
     autoHide? : true,
-    signOut? : (event : MouseEvent) => void
+    signOut? : (event : MouseEvent) => void,
+    childrenComponent ? : MyRoutes[]
 }
 
 export interface MyProps {
     back? : any,
     currentPath? : any,
     enableToolbar? : any,
-    history? : any
+    history? : any,
+    match? : any,
+    location? : any
 }
 
 export interface ArrayRoutes {

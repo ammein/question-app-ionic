@@ -5,8 +5,9 @@ import MainMenu from '../Menu/MainMenu';
 import MyRoutes from '../../Utils/Routes';
 import AllRoutes, { MyUser } from '../../Utils/Declaration/Utils';
 import Context from '../../HOC/Context/Context';
+import Aux from '../../HOC/Auxilliary/Auxilliary';
 
-var hashHistory = require("history").createHashHistory;
+export var hashHistory = require("history").createHashHistory;
 
 const createHashHistory = hashHistory();
 
@@ -40,26 +41,70 @@ class Layout extends Component<Props , State>{
                 return (
                     <Route exact key={i} path={val.path} component={val.component}></Route>
                 )
-            }else{
+            } else if ((/:/i).test(val.path ? val.path : "") && val.component && val.childrenComponent){
+                return (
+                    <Route key={i} path={val.path} render={(props) => (
+                        <Aux>
+                        <val.component {...props}>
+                        {
+                            val.childrenComponent!.map((value : AllRoutes , i : number , arr : AllRoutes[])=>{
+                                return(
+                                    <Route exact key={i} path={value.path} component={value.component}></Route>
+                                )
+                            })
+                        }
+                        </val.component>
+                        </Aux>
+                    ) }></Route>
+                )
+            } else if ((/:{1}/i).test(val.path ? val.path : "")){
+                return (
+                    <Route key={i} path={val.path} render={(props : any)=> <val.component {...props}/>}></Route>
+                )
+            }
+            else{
                 return (
                     <Route key={i} path={val.path} component={val.component}></Route>
                 )
             }
         })
     }
+
+    componentDidMount(){
+        var react = this;
+        firebase.auth().onAuthStateChanged(function (user : any) {
+            if (user) {
+                return react.setState({
+                    user : {
+                        uid : user.uid,
+                        email : user.email,
+                        displayName : user.displayName,
+                        emailVerified : user.emailVerified
+                    }
+                })
+            } else {
+                return;
+            }
+        });
+    }
+
     render(){
         return (
             <IonApp>
+                <Context.Provider value={{
+                    user : this.state.user
+                }}>
                 <Router history={createHashHistory}>
                     <IonSplitPane contentId="main">
                         <MainMenu />
                             <IonContent id="main">
                                 <Switch>
-                                    {this.renderPath()} 
+                                    {this.renderPath()}
                                 </Switch>
                             </IonContent>
                     </IonSplitPane>
                 </Router>
+                </Context.Provider>
             </IonApp>
         )
     }

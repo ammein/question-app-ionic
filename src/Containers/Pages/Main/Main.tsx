@@ -297,6 +297,48 @@ class Main extends PureComponent<Props , State>{
         }
     }
 
+    resendEmailVerification = (e : any) =>{
+        e.preventDefault();
+        var user = firebase.auth().currentUser;
+        var react = this;
+
+        return user.sendEmailVerification().then(()=>{
+            return react.setState({
+                toast : {
+                    showToast : true,
+                    message : "Email Verification sent to your email address : " + user.email,
+                    header : "SUCCESS !",
+                    position : "top",
+                    duration : 3000,
+                    dismissHandler : (()=>{
+                        react.setState({
+                            toast : {
+                                showToast : false
+                            }
+                        })
+                    })
+                }
+            })
+        }).catch(()=>{
+            return react.setState({
+                toast: {
+                    showToast: true,
+                    message: e.message + "\nYour Signed Up Email is" + user.email,
+                    header: "ERROR :",
+                    position: "top",
+                    duration: 3000,
+                    dismissHandler: (() => {
+                        react.setState({
+                            toast: {
+                                showToast: false
+                            }
+                        })
+                    })
+                }
+            })
+        })
+    }
+
     continueVerified = (e : any , recheckUser : any) =>{
         e.preventDefault();
         var user = firebase.auth().currentUser;
@@ -307,7 +349,7 @@ class Main extends PureComponent<Props , State>{
                 this.setState({
                     enableEmailVerification: false
                 });
-                this.context.recheckUser();
+                recheckUser();
                 return;
             } else if (user && !user.emailVerified) {
                 console.log("Running Email Not Verified : \n", user);
@@ -315,7 +357,7 @@ class Main extends PureComponent<Props , State>{
                     enableEmailVerification: true,
                     toast: {
                         showToast: true,
-                        message: "Are you sure you have verified your email address ?",
+                        message: "Are you sure you have verified your email address ? \n Email : " + user.email,
                         header: "ERROR :",
                         dismissHandler: (() => {
                             react.setState((prevState: State) => {
@@ -507,16 +549,28 @@ class Main extends PureComponent<Props , State>{
                         <Context.Consumer>
                             {(context : MyContext) => {
                                 return (
-                                    <IonButton
-                                        expand="full"
-                                        color="secondary"
-                                        style={[BtnStyle, SignInStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
-                                        onClick={(e: any) => {
-                                            return this.continueVerified(e , context.recheckUser);
-                                        }}>
-                                        <IonRippleEffect type="unbounded"></IonRippleEffect>
-                                        Continue
-                                    </IonButton>
+                                    <Aux>
+                                        <IonButtons>
+                                            <IonButton
+                                                color="secondary"
+                                                style={[BtnStyle, SignInStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
+                                                onClick={(e: any) => {
+                                                    return this.continueVerified(e , context.recheckUser);
+                                                }}>
+                                                <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                                Continue
+                                            </IonButton>
+                                            <IonButton
+                                                color="secondary"
+                                                style={[BtnStyle, SignUpStyle].reduce((init: any, next: any) => Object.assign(init, next), {}) as any}
+                                                onClick={(e: any) => {
+                                                    return this.resendEmailVerification(e);
+                                                }}>
+                                                <IonRippleEffect type="unbounded"></IonRippleEffect>
+                                                Resend
+                                            </IonButton>
+                                        </IonButtons>
+                                    </Aux>
                                 )
                             }}
                         </Context.Consumer>

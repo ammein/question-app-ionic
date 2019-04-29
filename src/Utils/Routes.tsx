@@ -2,6 +2,8 @@ import MyRoutes from "./Declaration/Utils";
 import Main from "../Containers/Pages/Main/Main";
 import Home from "../Containers/Pages/Home/Home";
 import Profile from "../Containers/Pages/Profile/Profile";
+import Topics from "../Containers/Pages/Topics/Topics";
+import Description from "../Containers/Pages/Description/Description";
 
 declare const firebase : any;
 
@@ -26,24 +28,28 @@ const Routes : MyRoutes[] = [
         link : true
     },
     {
-        path : "/topics",
+        path : "/:id",
         menu : false,
-        title : "Topics"
-    },
-    {
-        path : "/description",
-        menu : false,
-        title : "Description"
-    },
-    {
-        path : "/notes",
-        menu : false,
-        title : "Notes"
-    },
-    {
-        path : "/questions",
-        menu : false,
-        title : "Questions"
+        title : "Choose Topics",
+        component: Topics,
+        childrenComponent : [
+            {
+                path: "/:id/description",
+                menu: false,
+                title: "Description",
+                component : Description
+            },
+            {
+                path: "/:id/notes",
+                menu: false,
+                title: "Notes"
+            },
+            {
+                path: "/:id/questions",
+                menu: false,
+                title: "Questions"
+            },
+        ]
     },
     {
         title : "Sign Out",
@@ -71,24 +77,54 @@ export const getPath = (id : any) =>{
             return value.path;
         }else if (id === value.title){
             return value.path;
-        }else{
-            return arr[i];
+        }else if(id === value.component){
+            return value.path;
+        }else if(value.childrenComponent){
+            return value.childrenComponent.filter((val : MyRoutes,i : number ,arr :MyRoutes[])=>{
+                if (id === i) {
+                    return val.path;
+                } else if (id === value.path) {
+                    return val.path;
+                } else if (id === value.title) {
+                    return val.path;
+                } else if (id === value.component) {
+                    return val.path;
+                }
+            })
         }
     })
+    .reduce((init : MyRoutes , next : MyRoutes)=>{
+        return Object.assign(init , next);
+    },{})
 }
 
 export const getTitle = (id : any) =>{
     return Routes.filter((value: MyRoutes, i: number, arr: MyRoutes[]) => {
         if (id === i) {
-            return value.title;
+            return value.path;
         } else if (id === value.path) {
-            return value.title;
+            return value.path;
         } else if (id === value.title) {
-            return value.title;
-        } else {
-            return arr[i];
+            return value.path;
+        } else if (id === value.component) {
+            return value.path;
+        } else if (value.childrenComponent) {
+            return value.childrenComponent.filter((val: MyRoutes, i: number, arr: MyRoutes[]) => {
+                if (id === i) {
+                    return val.path;
+                } else if (id === value.path) {
+                    return val.path;
+                } else if (id === value.title) {
+                    return val.path;
+                } else if (id === value.component) {
+                    return val.path;
+                }
+            })
         }
     })
+        .reduce((init: MyRoutes, next: MyRoutes) => {
+            return Object.assign(init, next);
+        }, {})
 }
 
 export default Routes;

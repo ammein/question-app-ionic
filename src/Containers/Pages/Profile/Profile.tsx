@@ -122,7 +122,6 @@ class Profile extends Component<Props , State>{
                         updatedProfile[i].error = false;
                     }
                     return react.setState({
-                        saving: true,
                         profile: updatedProfile,
                         savePassword: true,
                         newPassword: val.value
@@ -140,7 +139,6 @@ class Profile extends Component<Props , State>{
                 console.log("Updated Value ", val.value);
                 updatedProfile[i].value = val.value;
                 return react.setState({
-                    saving : true,
                     profile : updatedProfile,
                     saveEmail : true,
                     newEmail : val.value
@@ -150,14 +148,12 @@ class Profile extends Component<Props , State>{
                 console.log("Updated Value ", val.value);
                 updatedProfile[i].value = val.value;
                 return react.setState({
-                    saving : true,
                     profile : updatedProfile
                 },function(){
                     return user.updateProfile({
                         [val.name] : val.value
                     }).then(()=>{
                         return react.setState({
-                            saving : false,
                             toast : {
                                 showToast : true,
                                 message : `Successfully update your profile info`,
@@ -187,12 +183,15 @@ class Profile extends Component<Props , State>{
         // Credential
         var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
         user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
+            react.setState({
+                saving : true,
+                savePassword: false
+            });
             return user.updatePassword(newPassword);
         }).then(()=>{
             return react.setState({
                 saving: false,
                 newPassword: undefined,
-                savePassword: false,
                 toast: {
                     showToast: true,
                     duration: 2000,
@@ -235,6 +234,10 @@ class Profile extends Component<Props , State>{
         // Credential
         var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
         return user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
+            react.setState({
+                saving : true,
+                saveEmail : false
+            });
             return user.updateEmail(email);
         }).then(()=>{
             return user.sendEmailVerification();
@@ -242,7 +245,6 @@ class Profile extends Component<Props , State>{
             return react.setState({
                 saving: false,
                 newEmail: undefined,
-                saveEmail: false,
                 toast: {
                     showToast: true,
                     duration: 2000,
@@ -390,8 +392,9 @@ class Profile extends Component<Props , State>{
         }
 
         return (
+            <Aux>
+            {Saving}
             <Content enableContent={true} enableToolbar={true}>
-                {Saving}
                 <Popover
                     open={this.state.saveEmail}
                     backdropDismiss={false}>
@@ -424,6 +427,7 @@ class Profile extends Component<Props , State>{
                     </IonButton>
                 </form>
             </Content>
+            </Aux>
         )
     }
 }

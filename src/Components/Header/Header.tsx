@@ -1,38 +1,54 @@
-import React , {useEffect , useState} from 'react';
-import MyRoutes from '../../Utils/Routes';
+import React , {useEffect , useState, CSSProperties} from 'react';
+import AllRoutes from '../../Utils/Routes';
 import { IonHeader, IonToolbar, IonButtons, IonMenuButton, IonBackButton, IonButton, IonIcon, IonTitle } from '@ionic/react';
+import MyRoutes, { MyProps } from '../../Utils/Declaration/Utils';
 
 interface MyState {
     title? : string
 }
 
-const Header = (props : any) => {
+interface Props extends MyProps{
+    goBack? : () => void,
+    getTitle ?: string,
+    style? : CSSProperties
+}
+
+const Header = (props : Props) => {
 
     const [state, setState] = useState<MyState>({
         title : ""
     })
 
     useEffect(() => {
+        console.log("Running Use Effect");
       const title : string = (window.location.hash.length > 1) ? window.location.hash.replace("#" , "") : window.location.pathname;
-        for (var property in MyRoutes){
-            if(MyRoutes.hasOwnProperty(property)){
-                if(MyRoutes[property].path === title){
-                    return setState({
-                        title : MyRoutes[property].title
-                    })
-                }
-            }
-        }
+
+      if(props.getTitle){
+          return setState({
+              title : props.getTitle
+          })
+      }else {
+          return AllRoutes.forEach((val: MyRoutes, i: number, arr: MyRoutes[]) => {
+              if (val.path === title) {
+                  return setState((prevState: MyState) => {
+                      return {
+                          title: val.title
+                      }
+                  })
+              }
+          })
+      }
     }, [])
 
     return(
-        <IonHeader>
+        <IonHeader style={props.style ? props.style : {} as any}>
             <IonToolbar>
                 <IonButtons slot="start">
                     {
                         props.back ? 
                         <IonBackButton 
-                            goBack={(()=> {})}
+                            goBack={props.goBack ? props.goBack : () => {}}
+                            onClick={props.goBack ? props.goBack : undefined}
                             defaultHref={props.currentPath}>
 
                         </IonBackButton>

@@ -1,4 +1,4 @@
-import React , { Component } from 'react';
+import React , { Component, CSSProperties } from 'react';
 import { MyProps } from '../../Utils/Declaration/Utils';
 import { IonHeader, IonContent, IonPage } from '@ionic/react';
 import Header from '../../Components/Header/Header';
@@ -7,7 +7,10 @@ import Context from '../Context/Context';
 
 interface Props extends MyProps {
     enableContent? : boolean,
-    authenticated? : boolean
+    authenticated? : boolean,
+    getTitle ? : string,
+    style? : CSSProperties,
+    goBack? : () => void
 }
 
 interface State {}
@@ -25,10 +28,12 @@ class Content extends Component<Props , State>{
             <Aux>
                 {this.props.enableContent ? 
                     <Aux>
-                        <Header back={this.props.back} currentPath={this.props.currentPath} enableToolbar={this.props.enableToolbar} />
-                        <IonContent scrollEvents={true} fullscreen={true} style={{
+                        <Header back={this.props.back} currentPath={this.props.currentPath} enableToolbar={this.props.enableToolbar} {...this.props} goBack={this.props.back && !this.props.goBack ? ()=>{
+                            return this.props.history.goBack();
+                        } : this.props.goBack} />
+                        <IonContent scrollEvents={true} fullscreen={true} style={[{
                             "--background" : "var(--ion-color-primary)"
-                        }}>
+                        } , this.props.style ? this.props.style : {}].reduce((init : any , next : any)=> Object.assign(init , next),{})}>
                             {this.props.children}
                         </IonContent>
                     </Aux>
