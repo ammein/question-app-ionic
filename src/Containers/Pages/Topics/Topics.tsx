@@ -5,18 +5,23 @@ import { MyProps } from '../../../Utils/Declaration/Utils';
 import { getPath } from '../../../Utils/Routes';
 import QuestionInstance from '../../../HOC/Axios/Axios';
 import { IonButton } from '@ionic/react';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import classes from './Slider.css';
+
 
 interface Props extends MyProps {}
 
 interface State {
     nested : boolean,
-    topic ?: string
+    topic ?: string,
+    changeTransition : boolean
 }
 
 class Topics extends Component<Props , State>{
 
     state : State= {
-        nested : false
+        nested : false,
+        changeTransition : false
     }
 
     constructor(props : Props){
@@ -69,17 +74,19 @@ class Topics extends Component<Props , State>{
                 {!this.state.nested ? 
                 <Aux>
                     <Content 
-                        enableContent={true} 
-                        enableToolbar={true} 
+                        enableContent={true}
                         {...this.props} 
                         currentPath={getPath(this.constructor)} 
+                        getTitle={this.toCapitalize(this.props.match.params.id)} 
                         back={true} 
                         goBack={() => {
                             var react = this;
                             this.setState({
                                 nested: false
                             }, function () {
-                                return react.props.history.goBack();
+                                return react.props.history.push({
+                                    pathname: `/`
+                                })
                             })
                         }}>
                             <p>{this.props.match.params.id}</p>
@@ -94,7 +101,7 @@ class Topics extends Component<Props , State>{
                     <Content 
                         enableContent={true} 
                         enableToolbar={true} 
-                        getTitle={this.props.match.params.id.length > 0 ? this.toCapitalize(this.props.match.params.id) + " Is Fun !" : "Learn Is Fun !"} 
+                        getTitle={this.props.match.params.id ? this.toCapitalize(this.props.match.params.id) + " Is Fun !" : "Learn Is Fun !"} 
                         {...this.props} 
                         currentPath={getPath(this.constructor)} 
                         back={true} 
@@ -105,11 +112,29 @@ class Topics extends Component<Props , State>{
                                     nested: false
                                 }, function () {
                                     return react.props.history.push({
-                                        pathname: `/`
+                                        pathname: `/${react.props.match.params.id}`
                                     })
                                 })
                             }}>
-                        {this.props.children}
+                        <TransitionGroup component={null}>
+                        <CSSTransition
+                            key={"myKey"}
+                            timeout={400}
+                            in={this.state.changeTransition}
+                            classNames="slide-transition"
+                            mountOnEnter
+                            unmountOnExit
+                            onEnter={() => this.setState({
+                                changeTransition : false
+                            })}
+                            onExited={() => this.setState({
+                                changeTransition: false
+                            })}>
+                            <div className={classes.content}>
+                                {this.props.children}
+                            </div>
+                        </CSSTransition>
+                        </TransitionGroup>
                     </Content>
                 }
             </Aux>

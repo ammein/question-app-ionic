@@ -1,9 +1,9 @@
 import React , { Component } from 'react';
-import {Router, Route, Switch} from 'react-router-dom';
-import {IonSplitPane, IonPage, IonRouterOutlet , IonApp, IonContent} from '@ionic/react';
+import { Route, Switch , Router} from 'react-router-dom';
+import {IonSplitPane, IonPage, IonRouterOutlet , IonApp, IonContent, IonRouterOutletInner} from '@ionic/react';
 import MainMenu from '../Menu/MainMenu';
 import MyRoutes from '../../Utils/Routes';
-import AllRoutes, { MyUser } from '../../Utils/Declaration/Utils';
+import AllRoutes, { MyUser, MyProps } from '../../Utils/Declaration/Utils';
 import Context from '../../HOC/Context/Context';
 import Aux from '../../HOC/Auxilliary/Auxilliary';
 
@@ -13,7 +13,7 @@ const createHashHistory = hashHistory();
 
 declare const firebase : any;
 
-interface Props {}
+interface Props extends MyProps {}
 
 interface State {
     user : MyUser
@@ -98,9 +98,9 @@ class Layout extends Component<Props , State>{
                     <IonSplitPane contentId="main">
                         <MainMenu />
                             <IonContent id="main">
-                                <Switch>
-                                    {this.renderPath()}
-                                </Switch>
+                                    <Switch>
+                                        {this.renderPath()}
+                                    </Switch>
                             </IonContent>
                     </IonSplitPane>
                 </Router>

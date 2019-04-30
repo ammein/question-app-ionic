@@ -1,14 +1,14 @@
 import React , { Component , CSSProperties } from 'react';
 import Content from '../../../HOC/Content/Content';
 import InputElements from '../../../Components/UI/Inputs/Inputs';
-import {Inputs, Toast} from '../../../Utils/Declaration/Utils';
+import {Inputs, Toast, MyProps} from '../../../Utils/Declaration/Utils';
 import { IonButton, IonButtons } from '@ionic/react';
 import MyToast from '../../../Components/UI/Toast/Toast';
 import Loading from '../../../Components/Loading/Loading';
 import Popover from '../../../Components/UI/Popover/Popover';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 
-interface Props {}
+interface Props extends MyProps {}
     
 interface State {
     profile : Inputs[],
@@ -76,6 +76,7 @@ class Profile extends Component<Props , State>{
 
     componentDidMount(){
         console.log("Running Component Did Mount");
+        console.log("Location" , this.props.location)
         var user = firebase.auth().currentUser;
         var userProfile = this.state.profile;
         var updatedUserProfile = [
@@ -180,13 +181,13 @@ class Profile extends Component<Props , State>{
     updatePassword = (newPassword ?: string , password ?: string) => {
         var user = firebase.auth().currentUser;
         var react = this;
+        react.setState({
+            saving : true,
+            savePassword: false
+        });
         // Credential
         var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
         user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
-            react.setState({
-                saving : true,
-                savePassword: false
-            });
             return user.updatePassword(newPassword);
         }).then(()=>{
             return react.setState({
@@ -231,13 +232,13 @@ class Profile extends Component<Props , State>{
     updateEmail = (email ?: string ,password ?: string) =>{
         var user = firebase.auth().currentUser;
         var react = this;
+        react.setState({
+            saving : true,
+            saveEmail : false
+        });
         // Credential
         var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
         return user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
-            react.setState({
-                saving : true,
-                saveEmail : false
-            });
             return user.updateEmail(email);
         }).then(()=>{
             return user.sendEmailVerification();

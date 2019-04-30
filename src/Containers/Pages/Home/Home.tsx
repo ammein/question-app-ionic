@@ -6,6 +6,7 @@ import IMAGE from '../../../Assets/SVG/logo.svg';
 import MySlider from '../../../Components/UI/Slider/Slider';
 import { Slider, MyProps } from '../../../Utils/Declaration/Utils';
 import testImage from '../../../Assets/Images/Ubuntu.PNG';
+import { Link } from 'react-router-dom';
 
 interface Props extends MyProps {}
 
