@@ -11,7 +11,7 @@ export interface PageState {
 }
 
 interface MyRoutes extends PageState{
-    thumbnail? : ImageBitmap | any,
+    thumbnail? : any,
     style? : CSSProperties,
     icon? : any,
     getLink? : string,
@@ -63,6 +63,11 @@ export interface Inputs {
     error? : boolean,
     line? : "full" | "inset" | "none",
     itemStyle? : string
+}
+
+
+String.prototype.capitalize = function(this : string){
+    return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 export interface MyUser extends IndexMyUser{

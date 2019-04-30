@@ -1,19 +1,16 @@
 import React , { Component } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import Content from '../../../HOC/Content/Content';
-import Context from '../../../HOC/Context/Context';
 import { MyProps } from '../../../Utils/Declaration/Utils';
-import { getPath, getTitle } from '../../../Utils/Routes';
+import { getPath } from '../../../Utils/Routes';
 import QuestionInstance from '../../../HOC/Axios/Axios';
-import {Router, Route} from 'react-router-dom';
-
-import {hashHistory} from '../../../Components/Layout/Layout';
 import { IonButton } from '@ionic/react';
 
 interface Props extends MyProps {}
 
 interface State {
-    nested : boolean
+    nested : boolean,
+    topic ?: string
 }
 
 class Topics extends Component<Props , State>{
@@ -37,12 +34,47 @@ class Topics extends Component<Props , State>{
             })
     }
 
+    topicHandler = (e : CustomEvent<any>,id : string) => {
+        e.preventDefault();
+        this.setState({
+            nested: true,
+            topic : id
+        })
+        this.props.history.push({
+            pathname : `/${this.props.match.params.id}/${id}/description`,
+            state : {
+                topic : true
+            }
+        });
+    }
+
+    changeSegment = (e : any) => {
+        console.log("Topic Value : ",e.detail.value)
+        var id : string = e.detail.value.toLowerCase();
+        this.props.history.push({
+            pathname: `/${this.props.match.params.id}/${this.state.topic}/${id}`,
+            state: {
+                topic: true
+            }
+        });
+    }
+
+    toCapitalize = (word : string) =>{
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
     render(){
         return (
             <Aux>
                 {!this.state.nested ? 
                 <Aux>
-                        <Content enableContent={true} enableToolbar={true} {...this.props} currentPath={getPath(this.constructor)} back={true} goBack={() => {
+                    <Content 
+                        enableContent={true} 
+                        enableToolbar={true} 
+                        {...this.props} 
+                        currentPath={getPath(this.constructor)} 
+                        back={true} 
+                        goBack={() => {
                             var react = this;
                             this.setState({
                                 nested: false
@@ -53,34 +85,31 @@ class Topics extends Component<Props , State>{
                             <p>{this.props.match.params.id}</p>
                         <p>Hey !</p>
                         <IonButton
-                            onClick={((e: any) => {
-                                e.preventDefault();
-                                this.setState({
-                                    nested: true
-                                })
-                                this.props.history.push({
-                                    pathname: `/${this.props.match.params.id}/description`,
-                                    state: {
-                                        fromTopics: true
-                                    }
-                                })
-                            })}>
+                            onClick={(e : any) => this.topicHandler(e , "topic")}>
                             Go To Description
                     </IonButton>
-                        </Content>
+                    </Content>
                 </Aux>
                     :
-                    <Content enableContent={true} enableToolbar={true} {...this.props} currentPath={getPath(this.constructor)} back={true} goBack={() => {
-                            var react = this;
-                            this.setState({
-                                nested: false
-                            }, function () {
-                                return react.props.history.push({
-                                    pathname : "/"
+                    <Content 
+                        enableContent={true} 
+                        enableToolbar={true} 
+                        getTitle={this.props.match.params.id.length > 0 ? this.toCapitalize(this.props.match.params.id) + " Is Fun !" : "Learn Is Fun !"} 
+                        {...this.props} 
+                        currentPath={getPath(this.constructor)} 
+                        back={true} 
+                        changeListener={(e: any) => this.changeSegment(e)} 
+                        goBack={() => {
+                                var react = this;
+                                this.setState({
+                                    nested: false
+                                }, function () {
+                                    return react.props.history.push({
+                                        pathname: `/`
+                                    })
                                 })
-                            })
-                        }}>
-                    {this.props.children}
+                            }}>
+                        {this.props.children}
                     </Content>
                 }
             </Aux>

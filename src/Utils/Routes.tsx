@@ -1,9 +1,10 @@
 import MyRoutes from "./Declaration/Utils";
-import Main from "../Containers/Pages/Main/Main";
 import Home from "../Containers/Pages/Home/Home";
 import Profile from "../Containers/Pages/Profile/Profile";
 import Topics from "../Containers/Pages/Topics/Topics";
-import Description from "../Containers/Pages/Description/Description";
+import Description from "../Containers/Pages/Topics/Description/Description";
+import Questions from "../Containers/Pages/Topics/Questions/Questions";
+import Notes from "../Containers/Pages/Topics/Notes/Notes";
 
 declare const firebase : any;
 
@@ -34,7 +35,7 @@ const Routes : MyRoutes[] = [
         component: Topics,
         childrenComponent : [
             {
-                path: "/:id/description",
+                path: "/:id/:topic/description",
                 menu: false,
                 title: "Description",
                 component : Description,
@@ -42,16 +43,18 @@ const Routes : MyRoutes[] = [
                 segment: true,
             },
             {
-                path: "/:id/notes",
+                path: "/:id/:topic/notes",
                 menu: false,
                 title: "Notes",
+                component : Notes,
                 enableSegment: true,
                 segment: true,
             },
             {
-                path: "/:id/questions",
+                path: "/:id/:topic/questions",
                 menu: false,
                 title: "Questions",
+                component : Questions,
                 enableSegment: true,
                 segment: true,
             },

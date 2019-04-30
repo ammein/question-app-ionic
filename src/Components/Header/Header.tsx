@@ -12,7 +12,9 @@ interface MyState {
 
 interface Props extends MyProps{
     goBack? : () => void,
-    style? : CSSProperties
+    getTitle ?: string,
+    style? : CSSProperties,
+    changeListener : (e : any) => void
 }
 
 const Header = (props : Props) => {
@@ -107,6 +109,13 @@ const Header = (props : Props) => {
         })
     }
 
+    var segmentParentStyle : any = {
+        "--background" : "var(--ion-color-secondary)",
+        "--indicator-color": "var(--ion-color-light)",
+        "--color-checked": "var(--ion-color-secondary)",
+        "--background-checked": "var(--ion-color-primary-shade)"
+    } as CSSProperties;
+
     return(
         <IonHeader style={props.style ? props.style : {} as any}>
             <IonToolbar>
@@ -127,11 +136,11 @@ const Header = (props : Props) => {
                         </IonMenuButton>
                     }
                 </IonButtons>
-                <IonTitle>{state.title}</IonTitle>
+                <IonTitle>{props.getTitle ? props.getTitle : state.title}</IonTitle>
             </IonToolbar>
             {props.enableToolbar ? 
             <IonToolbar>
-                <IonSegment onIonChange={(e: any) => console.log('Segment selected', e.detail.value)}>
+                <IonSegment onIonChange={props.changeListener} style={segmentParentStyle}>
                 {Segments}
                 </IonSegment>
             </IonToolbar>

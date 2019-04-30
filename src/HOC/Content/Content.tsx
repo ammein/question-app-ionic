@@ -10,7 +10,8 @@ interface Props extends MyProps {
     authenticated? : boolean,
     getTitle ? : string,
     style? : CSSProperties,
-    goBack? : () => void
+    goBack? : () => void,
+    changeListener ?: (e : any) => void
 }
 
 interface State {}
@@ -30,7 +31,9 @@ class Content extends Component<Props , State>{
                     <Aux>
                         <Header back={this.props.back} currentPath={this.props.currentPath} enableToolbar={this.props.enableToolbar} {...this.props} goBack={this.props.back && !this.props.goBack ? ()=>{
                             return this.props.history.goBack();
-                        } : this.props.goBack} />
+                        } : this.props.goBack}
+                            changeListener={this.props.changeListener ? this.props.changeListener : (e : any) => console.log(e.detail.value)}
+                            getTitle={this.props.getTitle ? this.props.getTitle : undefined} />
                         <IonContent scrollEvents={true} fullscreen={true} style={[{
                             "--background" : "var(--ion-color-primary)"
                         } , this.props.style ? this.props.style : {}].reduce((init : any , next : any)=> Object.assign(init , next),{})}>
