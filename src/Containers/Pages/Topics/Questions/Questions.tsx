@@ -14,7 +14,7 @@ class Questions extends Component<Props , State>{
 
     componentDidMount() {
         console.log("Param Description", this.props)
-        QuestionInstance.get('/subject/' + this.props.match.params.id + "/" + this.props.match.params.topic + "/" + 'questions.json')
+        QuestionInstance.get('/subject/' + this.props.match.params.id + "/" + this.props.match.params.topic + "/" + this.props.match.params.index + "/" + 'questions.json')
             .then((data: any) => {
                 console.log(data);
             })

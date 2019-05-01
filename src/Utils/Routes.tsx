@@ -35,7 +35,7 @@ const Routes : MyRoutes[] = [
         component: Topics,
         childrenComponent : [
             {
-                path: "/:id/:topic/description",
+                path: "/:id/:topic/:index/description",
                 menu: false,
                 title: "Description",
                 component : Description,
@@ -43,7 +43,7 @@ const Routes : MyRoutes[] = [
                 segment: true,
             },
             {
-                path: "/:id/:topic/notes",
+                path: "/:id/:topic/:index/notes",
                 menu: false,
                 title: "Notes",
                 component : Notes,
@@ -51,7 +51,7 @@ const Routes : MyRoutes[] = [
                 segment: true,
             },
             {
-                path: "/:id/:topic/questions",
+                path: "/:id/:topic/:index/questions",
                 menu: false,
                 title: "Questions",
                 component : Questions,

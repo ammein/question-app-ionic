@@ -65,10 +65,26 @@ export interface Inputs {
     itemStyle? : string
 }
 
-
-String.prototype.capitalize = function(this : string){
-    return this.charAt(0).toUpperCase() + this.slice(1);
+export interface Questions{    
+    question: string,
+    answers : string[],
+    correctAnswer : string,
+    userAnswer ? : string
 }
+
+export interface MyTopics {
+    name : string,
+    description : string ,
+    notes : string,
+    questions: Questions[],
+    completion?: number
+}
+
+export interface UserTopics{
+    data : MyTopics[]
+    buy ?: boolean
+}
+
 
 export interface MyUser extends IndexMyUser{
     emailVerified : boolean,

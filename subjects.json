@@ -1,0 +1,166 @@
+{
+    "subject": {
+        "english": {
+            "topics": [{
+                    "name": "Learn ABC",
+                    "description": "Consecte ABC games and alphabet activities help children with pre-reading and pre-writing skills, and they are best to introduce when children start talking about the alphabet or showing interest in it. When children see letters on paper and try to name them, they are showing interest in learning about the alphabet. When they start “pretending” to read books, they are interested in learning more. And little by little we can help them put the clues together to figure out how to put all the pieces together.tur occaecat in officia sit do. Dolor exercitation et elit sit aliqua voluptate. Enim id culpa id amet veniam occaecat. Sunt ut incididunt cillum duis exercitation occaecat. Duis amet tempor amet deserunt elit adipisicing ea non non proident. Amet occaecat eu sit reprehenderit irure aliqua quis sunt. Eiusmod aute velit eu officia consequat eu anim.",
+                    "notes": {
+                        "src": "https://www.youtube.com/watch?v=uCIsBFV87-U"
+                    },
+                    "questions": [{
+                            "question": "B for Nest",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "A for Apple",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "T for Telephone",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "G for Jam",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "S for Snake",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        }
+                    ]
+                },
+                {
+                    "name": "Nouns-Singular",
+                    "description": "Singular is a noun(of a word or form) denoting or referring to just one person or thing.(the third person singular form of the verb)",
+                    "notes": [{
+                            "imageURL": "http://oi66.tinypic.com/vwq0xt.jpg"
+                        },
+                        {
+                            "imageURL": "http://oi66.tinypic.com/2ylvd5u.jpg"
+                        }
+                    ],
+                    "questions": [{
+                            "question": "A pen ",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "An Umberella ",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "A Aeroplane ",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "An Dinasour",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "A Book ",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        }
+                    ]
+                },
+                {
+                    "name": "Nouns-Plural",
+                    "description": "Plural is a noun(of a word or form) denoting more than one, or (in languages with dual number) more than two.",
+                    "notes": [{
+                            "imageURL": "http://oi65.tinypic.com/6zu1xx.jpg"
+                        },
+                        {
+                            "imageURL": "http://oi67.tinypic.com/2qsm1d4.jpg"
+                        },
+                        {
+                            "imageURL": "http://oi64.tinypic.com/34ynqdi.jpg"
+                        },
+                        {
+                            "imageURL": "http://oi68.tinypic.com/2dr53wm.jpg"
+                        }
+                    ],
+                    "questions": [{
+                            "question": "Puppys",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "Roofs",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "Geese",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "Dominos",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "Keys",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        }
+                    ]
+                }
+            ]
+        }
+
+    }
+}

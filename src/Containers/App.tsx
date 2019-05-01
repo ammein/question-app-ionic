@@ -7,6 +7,8 @@ import Context from '../HOC/Context/Context';
 import { MyContext } from '../Utils/Declaration/Utils';
 import '../theme.css';
 import Loading from '../Components/Loading/Loading';
+import '@ionic/core/css/core.css';
+import '@ionic/core/css/ionic.bundle.css';
 
 interface State {
   authenticated? : boolean,

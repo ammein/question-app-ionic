@@ -1,7 +1,20 @@
-import { firebaseEmailVerification } from "../Declaration/Utils";
+import { firebaseEmailVerification, MyUser, MyTopics, UserTopics } from "../Declaration/Utils";
 import config from '../Firebase/Config';
 
 // Wanted to do redirect to the app. But need to do a lot of configurations
+
+export interface MyFirebase {
+    database() : {
+        ref(link : string) : {
+            once(value : "value" | undefined) : Promise<any>,
+            on(value: "value" | undefined , callback : (snapshot : any)=>void): Promise<any>,
+            set(value : any , callback? : () =>void) : void 
+        }
+    },
+    auth() : {
+        currentUser : MyUser extends any? MyUser : any
+    }
+}
 
 interface CustomAction{
     mode : "verifyEmail" | "resetPassword" | "recoverEmail",

@@ -90,11 +90,11 @@ class Layout extends Component<Props , State>{
 
     render(){
         return (
+        <Router history={createHashHistory}>
             <IonApp>
                 <Context.Provider value={{
                     user : this.state.user
                 }}>
-                <Router history={createHashHistory}>
                     <IonSplitPane contentId="main">
                         <MainMenu />
                             <IonContent id="main">
@@ -103,9 +103,9 @@ class Layout extends Component<Props , State>{
                                     </Switch>
                             </IonContent>
                     </IonSplitPane>
-                </Router>
                 </Context.Provider>
             </IonApp>
+        </Router>
         )
     }
 }
