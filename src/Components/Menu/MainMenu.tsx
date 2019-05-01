@@ -29,8 +29,7 @@ class MainMenu extends Component<Props , State>{
 
     render(){
         return (
-            <Aux>
-            <IonMenu type="push" side="start" contentId="main" swipeGesture={true} style={{
+            <IonMenu type="push" side="start" contentId="MyMenu" swipeGesture={true} style={{
                 color : "white"
             }}>
                 <IonHeader>
@@ -40,13 +39,12 @@ class MainMenu extends Component<Props , State>{
                         <IonTitle>Menu</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                    <IonContent class={classes.MenuContent}>
+                <IonContent class={classes.MenuContent}>
                     <IonList>
                         <SubMenu data={this.state.allRoutes}/>
                     </IonList>
                 </IonContent>
             </IonMenu>
-            </Aux>
         )
     }
 }

@@ -34,7 +34,7 @@ class Content extends Component<Props , State>{
                         } : this.props.goBack}
                             changeListener={this.props.changeListener ? this.props.changeListener : (e : any) => console.log(e.detail.value)}
                             getTitle={this.props.getTitle ? this.props.getTitle : undefined} />
-                        <IonContent scrollEvents={true} fullscreen={true} style={[{
+                        <IonContent fullscreen={false} scrollEvents={true} style={[{
                             "--background" : "var(--ion-color-primary)"
                         } , this.props.style ? this.props.style : {}].reduce((init : any , next : any)=> Object.assign(init , next),{})}>
                             {this.props.children}

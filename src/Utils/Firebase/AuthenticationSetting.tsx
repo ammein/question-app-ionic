@@ -8,7 +8,8 @@ export interface MyFirebase {
         ref(link : string) : {
             once(value : "value" | undefined) : Promise<any>,
             on(value: "value" | undefined , callback : (snapshot : any)=>void): Promise<any>,
-            set(value : any , callback? : () =>void) : void 
+            set(value : any , callback? : () =>void) : void,
+            update(value : any) : void 
         }
     },
     auth() : {

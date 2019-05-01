@@ -1,5 +1,4 @@
 import React , { ComponentClass, CSSProperties } from "react";
-import {ToastButton} from '@ionic/core';
 
 export interface PageState {
     path? : string,
@@ -115,7 +114,7 @@ export interface Toast{
     duration?: number,
     header? : string,
     position?: "top" | "bottom" | "middle" | undefined,
-    buttons? : (string | ToastButton)[] | undefined,
+    buttons? : any[],
     color?: "primary" | "secondary" | "tertiary" | "success" | "warning" | "danger" | "light" | "medium" | "dark" 
 }
 

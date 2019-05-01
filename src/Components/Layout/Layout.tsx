@@ -91,20 +91,16 @@ class Layout extends Component<Props , State>{
     render(){
         return (
         <Router history={createHashHistory}>
-            <IonApp>
-                <Context.Provider value={{
-                    user : this.state.user
-                }}>
-                    <IonSplitPane contentId="main">
-                        <MainMenu />
-                            <IonContent id="main">
-                                    <Switch>
-                                        {this.renderPath()}
-                                    </Switch>
-                            </IonContent>
-                    </IonSplitPane>
-                </Context.Provider>
-            </IonApp>
+            <Context.Provider value={{
+                user : this.state.user
+            }}>
+                <IonSplitPane contentId="MyMenu">
+                    <MainMenu />
+                        <IonContent id="MyMenu">
+                            {this.renderPath()}
+                        </IonContent>
+                </IonSplitPane>
+            </Context.Provider>
         </Router>
         )
     }

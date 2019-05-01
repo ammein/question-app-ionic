@@ -21,6 +21,7 @@ if (window.cordova) {
 
 declare global {
     interface Window {
-        cordova: any
+        cordova: any,
+        plugins : any
     }
 }

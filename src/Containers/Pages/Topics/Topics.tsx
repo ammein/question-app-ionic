@@ -4,7 +4,7 @@ import Content from '../../../HOC/Content/Content';
 import { MyProps, MyTopics, MyContext, UserTopics ,Questions } from '../../../Utils/Declaration/Utils';
 import { getPath } from '../../../Utils/Routes';
 import QuestionInstance from '../../../HOC/Axios/Axios';
-import { IonButton, IonCard, IonCardHeader, IonCardContent , IonProgressBar } from '@ionic/react';
+import { IonButton, IonCard, IonCardHeader, IonCardContent , IonProgressBar, IonButtons } from '@ionic/react';
 import {CSSTransition, TransitionGroup, Transition} from 'react-transition-group';
 import classes from './Topics.css';
 import { MyFirebase } from '../../../Utils/Firebase/AuthenticationSetting';
@@ -59,7 +59,7 @@ class Topics extends Component<Props , State>{
                     };
                     react.state.dataTopic!.forEach((val : MyTopics , i : number , arr : MyTopics[])=>{
                         if(val.name === UserTopics.data[i].name){
-                            UserTopics.data[i] = val;
+                            val = UserTopics.data[i];
                         }
                     })
                     react.setState({
@@ -95,7 +95,8 @@ class Topics extends Component<Props , State>{
         this.props.history.push({
             pathname : `/${this.props.match.params.id}/${id}/${index}/description`,
             state : {
-                topic : true
+                ...this.state,
+                topicActive :this.state.dataTopic![index]
             }
         });
     }
@@ -118,7 +119,8 @@ class Topics extends Component<Props , State>{
                     react.props.history.push({
                         pathname: `/${react.props.match.params.id}/${react.state.topic}/${react.state.index}/${id}`,
                         state: {
-                            topic: true
+                            ...react.state,
+                            topicActive: react.state.dataTopic![react.state.index as number]
                         }
                     });
                 })
@@ -150,8 +152,7 @@ class Topics extends Component<Props , State>{
 
         const cardStyle : any = {
             "--background": "var(--ion-color-secondary)",
-            "--color" : "var(--ion-color-light)",
-            padding : "15px 25px"
+            "--color" : "var(--ion-color-light)"
         } as CSSProperties;
 
         const textProgressStyle : any = {
@@ -161,14 +162,31 @@ class Topics extends Component<Props , State>{
 
         const progressColorName: string = "--progress-background"
 
-        var progressColor : any = {} as CSSProperties;
-
         const duration : number = 350;
 
         var defaultStyle : any = {
             transition: `all ${duration}ms ease-in-out`,
             opacity : 0,
             left: 0
+        } as CSSProperties;
+
+        const buttonStyle : any = {
+            margin: "0",
+            flex: "1",
+            "--color" : "var(--ion-color-light)",
+            height : "50px"
+        } as CSSProperties;
+
+        var StudyNowStyle : any = {
+            "--background" : "var(--ion-color-tertiary-shade)"
+        } as CSSProperties;
+
+        var BuyNowStyle : any = {
+            "--background" : "var(--ion-color-medium-shade)"
+        } as CSSProperties;
+
+        var CardArea : any = {
+            margin: "0 0 100px 0"
         } as CSSProperties;
 
         var transitionStyles : any = {
@@ -210,9 +228,16 @@ class Topics extends Component<Props , State>{
                                 })
                             })
                         }}>
-                            <div>
+                            <div style={CardArea}>
                             {
                                 this.state.dataTopic ? this.state.dataTopic.map((val: MyTopics, i: number, arr: MyTopics[])=>{
+
+                                    var progressColor: any = {
+                                        padding: "5px",
+                                        borderRadius: "10px"
+                                    } as CSSProperties;
+
+                                    // Generate different color based on grades
 
                                     var calculate : number = this.calculateCompletion(val ,i);
 
@@ -226,27 +251,53 @@ class Topics extends Component<Props , State>{
                                         progressColor[progressColorName] = "var(--ion-color-danger)";
                                     }
 
-
                                     return (
-                                        <IonCard key={i + val.name} style={cardStyle} onClick={(e : any)=>{
-                                            this.topicHandler(e , "topics" , i)
-                                        }}>
-                                            <h3 
+                                        <IonCard key={i + val.name} style={cardStyle}>
+                                            <div style={{
+                                                padding: "15px 25px 0 25px"
+                                            }}>
+                                            
+                                                <h3 
                                                 style={{
                                                     fontWeight : "bold"
                                                 }}>{val.name}</h3>
-                                            <div style={progressArea}>
-                                                <p style={textProgressStyle}>Your Progress : {this.calculateCompletion(val, i)}%</p>
-                                                <IonProgressBar 
-                                                value={this.calculateCompletion(val, i) === 0 ? 0.01 : this.calculateCompletion(val, i)/100}
-                                                style={progressColor}></IonProgressBar>
-                                            </div>
-                                            <details>
-                                                <summary>Description</summary>
-                                                <IonCardContent>
-                                                    {val.description}
-                                                </IonCardContent>
-                                            </details>
+
+                                                <div style={progressArea}>
+                                                    <p style={textProgressStyle}>{this.calculateCompletion(val, i) === 100 ? "Awesome Score : " + this.calculateCompletion(val, i) + "%": "Score : " + this.calculateCompletion(val, i)+ "%"}</p>
+                                                    <IonProgressBar 
+                                                    value={this.calculateCompletion(val, i) === 0 ? 0.01 : this.calculateCompletion(val, i)/100}
+                                                    style={progressColor}></IonProgressBar>
+                                                </div>
+
+                                                <details style={{
+                                                    margin : "20px 0"
+                                                }}>
+                                                    <summary>Tap Here for Description</summary>
+                                                    <IonCardContent>
+                                                        {val.description}
+                                                    </IonCardContent>
+                                                </details>
+                                        </div>
+                                            <IonButtons>
+                                                <IonButton
+                                                    expand="full"
+                                                    fill="solid"
+                                                    style={[buttonStyle , StudyNowStyle].reduce((init : any , next : any)=> Object.assign(init , next) , {})}
+                                                    onClick={(e: any) => {
+                                                        this.topicHandler(e, "topics", i)
+                                                    }}>
+                                                    Start Study
+                                                </IonButton>
+                                                <IonButton
+                                                    expand="full"
+                                                    fill="solid"
+                                                    style={[buttonStyle, BuyNowStyle].reduce((init: any, next: any) => Object.assign(init, next), {})}
+                                                    onClick={(e: any) => {
+                                                        this.topicHandler(e, "topics", i)
+                                                    }}>
+                                                    Buy Now
+                                                </IonButton>
+                                            </IonButtons>
                                         </IonCard>
                                     )
                                 })

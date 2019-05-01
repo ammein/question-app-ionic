@@ -2,7 +2,7 @@ import React , { Component } from 'react';
 import Aux from '../../../../HOC/Auxilliary/Auxilliary';
 import { MyProps } from '../../../../Utils/Declaration/Utils';
 import QuestionInstance from '../../../../HOC/Axios/Axios';
-import { IonCard, IonImg, IonContent } from '@ionic/react';
+import { IonCard, IonImg, IonContent, IonButton } from '@ionic/react';
 
 interface Props extends MyProps {}
 
@@ -46,17 +46,26 @@ class Notes extends Component<Props , State>{
         if(this.state.data!.length > 0){
             render = (
                 this.state.data!.map((val: any, i: number, arr: any[]) => {
+                    var width : number = window.innerWidth - 20;
+                    var height : number = width * (width / 500)
                     return (
                         <IonCard key={i}>
-                            {val.imageURL.length > 0 ? val.imageURL.map((value : any , i : number)=>{
+                            { val.length > 0 ? val.map((value : any , i : number)=>{
                                 return (
-                                    <IonImg src={value.imageURL}></IonImg>
+                                    <IonImg key={value + i} src={value.imageURL}></IonImg>
                                 )
-                            }) : <IonImg src={value.imageURL}></IonImg>}
-                            {val.src ? <iframe
+                            }) : null}
+                            {val.src && window.plugins ? <IonCard>
+                                <IonButton onClick={(e : any)=>{
+                                    window.plugins.streamingMedia.playVideo(val.src);
+                                }}>
+                                    Play Video
+                                </IonButton>
+                            </IonCard> : val.src && !window.plugins ? <iframe
                                 width={window.innerWidth - 20}
-                                height={window.innerHeight - 20}
-                                src={val.src + "?controls=0"}>
+                                height={height}
+                                // Issue found for iframe and solution on : https://stackoverflow.com/questions/50028938/refused-to-display-a-frame-because-it-set-x-frame-options-to-sameorigin
+                                src={val.src + "?controls=0#origin"}>
                             </iframe> : null}
                             {
                                 typeof val === "string" ? <IonContent>val</IonContent> : null
@@ -71,7 +80,11 @@ class Notes extends Component<Props , State>{
 
         return (
             <Aux>
+                <div style={{
+                    margin: "0 0 120px 0"
+                }}>
                 {render}
+                </div>
             </Aux>
         )
     }

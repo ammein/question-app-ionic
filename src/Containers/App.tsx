@@ -78,7 +78,9 @@ class App extends Component<{}, State> {
 
     return (
       <Aux>
+        <IonApp>
           {render}
+        </IonApp>
       </Aux>
     );
   }

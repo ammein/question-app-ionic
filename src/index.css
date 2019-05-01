@@ -6,7 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #203145;
+  background: var(--ion-color-primary) !important;
   overflow-x: hidden;
 }
 
@@ -14,13 +14,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
+/* 
 div#root{
   width: 100%;
   height: 100%;
-}
+} */
 
 ion-title{
   font-weight: 700;
   font-size: 21px;
+}
+
+/* Make details triangle dissapear */
+details summary::-webkit-details-marker {
+  display: none;
 }
