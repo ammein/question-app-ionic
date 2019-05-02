@@ -86,6 +86,25 @@ class Topics extends Component<Props , State>{
     }
 
     setUser = (userId : string) =>{
+
+        var react : this = this;
+        react.setState((prevState : State) =>{
+
+            if(prevState.dataTopic){
+                prevState.dataTopic.map((val: MyTopics, i: number, arr: MyTopics[]) => {
+                    if (val.completion === undefined) {
+                        val.completion = 0;
+                    }
+                    return val;
+                });
+            }
+
+            return {
+                dataTopic: prevState.dataTopic
+            }
+
+        })
+
         database.ref("/users/" + userId).set({
             user : _.pick(this.context.user , ["displayName" , "email"]),
             subject : {
@@ -175,29 +194,22 @@ class Topics extends Component<Props , State>{
         return completion / allTopics.questions.length * 100;
     }
 
-    sendCompletionData = (topicName : string , completion : number) => {
-        const adjustData : MyTopics[] = [
-            ...this.state.dataTopic
-        ];
+    componentDidUpdate(){
+        // Update Completion Data
+        if (this.state.dataTopic && document.querySelector("#completion")){
+            const updatedTopics: MyTopics[] = [
+                ...this.state.dataTopic
+            ];
+            var paragraph = document.querySelectorAll("#completion");
 
-        var react : this = this;
-
-        adjustData.map((val : MyTopics, i : number , arr : MyTopics[])=>{
-            if(val.name === topicName){
-                val.completion = completion;
-            }
-        });
-
-        // Bad saving state behavior because its under a loop
-        // this.setState((prevState : State)=>{
-        //     return {
-        //         dataTopic : adjustData
-        //     }
-        // })
-
-        // database.ref("/users/" + this.context.user!.uid + "/subject/" + this.props.match.params.id).update({
-        //     data: adjustData
-        // });
+            updatedTopics.map((val : MyTopics , i : number , arr : MyTopics[])=>{
+                if(val.name === paragraph[i].getAttribute("data-topic")){
+                    database.ref("/users/" + this.context.user!.uid + "/subject/" + this.props.match.params.id + "/data/" + i).update({
+                        completion : parseInt(paragraph[i].getAttribute("data-value") as string)
+                    })
+                }
+            })
+        }
     }
 
     toCapitalize = (word : string) =>{
@@ -455,7 +467,6 @@ class Topics extends Component<Props , State>{
                                         progressColor[progressColorName] = "var(--ion-color-danger)";
                                     }
 
-                                    this.sendCompletionData(val.name, this.calculateCompletion(val, i));
 
                                     return (
                                         <IonCard key={i + val.name} style={cardStyle}>
@@ -469,7 +480,7 @@ class Topics extends Component<Props , State>{
                                                 }}>{val.name}</h3>
 
                                                 <div style={progressArea}>
-                                                    <p style={textProgressStyle}>{this.calculateCompletion(val, i) === 100 ? "Awesome Score : " + this.calculateCompletion(val, i) + "%": "Score : " + this.calculateCompletion(val, i)+ "%"}</p>
+                                                    <p id="completion" data-topic={val.name} data-value={this.calculateCompletion(val,i)} style={textProgressStyle}>{this.calculateCompletion(val, i) === 100 ? "Awesome Score : " + this.calculateCompletion(val, i) + "%": "Score : " + this.calculateCompletion(val, i)+ "%"}</p>
                                                     <IonProgressBar 
                                                     value={this.calculateCompletion(val, i) === 0 ? 0.01 : this.calculateCompletion(val, i)/100}
                                                     style={progressColor}></IonProgressBar>
@@ -568,4 +579,4 @@ class Topics extends Component<Props , State>{
         )
     }
 }
-export default Topics;
+export default React.memo(Topics);
