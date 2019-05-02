@@ -8,12 +8,17 @@ export interface MyFirebase {
         ref(link : string) : {
             once(value : "value" | undefined) : Promise<any>,
             on(value: "value" | undefined , callback : (snapshot : any)=>void): Promise<any>,
-            set(value : any , callback? : () =>void) : void,
+            set(value : any , callback? : (error : any) => void) : void,
             update(value : any) : void 
         }
     },
-    auth() : {
-        currentUser : MyUser extends any? MyUser : any
+    auth : {
+        () : {
+            currentUser : MyUser extends any? MyUser : any
+        }
+        EmailAuthProvider: {
+            credential(email: string | MyFirebase["auth"]["call"]["arguments"]["currentUser"], password: string): void
+        }
     }
 }
 

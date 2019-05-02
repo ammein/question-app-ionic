@@ -1,7 +1,7 @@
 import React , { Component, CSSProperties, ContextType } from 'react';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
 import Content from '../../../HOC/Content/Content';
-import { MyProps, MyTopics, MyContext, UserTopics ,Questions } from '../../../Utils/Declaration/Utils';
+import { MyProps, MyTopics, MyContext, UserTopics ,Questions, Toast } from '../../../Utils/Declaration/Utils';
 import { getPath } from '../../../Utils/Routes';
 import QuestionInstance from '../../../HOC/Axios/Axios';
 import { IonButton, IonCard, IonCardHeader, IonCardContent , IonProgressBar, IonButtons } from '@ionic/react';
@@ -9,6 +9,10 @@ import {CSSTransition, TransitionGroup, Transition} from 'react-transition-group
 import classes from './Topics.css';
 import { MyFirebase } from '../../../Utils/Firebase/AuthenticationSetting';
 import context from '../../../HOC/Context/Context';
+import Popover from '../../../Components/UI/Popover/Popover';
+import InputElements from '../../../Components/UI/Inputs/Inputs';
+import MyToast from '../../../Components/UI/Toast/Toast';
+import _ from 'lodash';
 
 declare const firebase : MyFirebase ;
 
@@ -22,14 +26,20 @@ interface State {
     buy ? : boolean,
     topic ?: string,
     changeTransition : boolean,
-    index ?: number
+    index ?: number,
+    popover : boolean,
+    toast : Toast
 }
 
 class Topics extends Component<Props , State>{
 
     state : State= {
         nested : false,
-        changeTransition : true
+        changeTransition : true,
+        popover : false,
+        toast : {
+            showToast : false
+        }
     }
 
     static contextType = context;
@@ -49,13 +59,13 @@ class Topics extends Component<Props , State>{
                 react.setState({
                     dataTopic : [...data]
                 })
-                return database.ref("/users/" + this.context.user!.uid).once("value");
+                return database.ref("/users/" + this.context.user!.uid + "/subject").once("value");
             })
             .then((data)=>{
                 if(data.val()){
                     const UserTopics: UserTopics = {
                         data: data.val()[react.props.match.params.id].data,
-                        buy: data.val()[react.props.match.params.id].buy
+                        buy: data.val()[react.props.match.params.id].buy ? data.val()[react.props.match.params.id].buy : false
                     };
                     react.state.dataTopic!.forEach((val : MyTopics , i : number , arr : MyTopics[])=>{
                         if(val.name === UserTopics.data[i].name){
@@ -67,22 +77,47 @@ class Topics extends Component<Props , State>{
                         buy : UserTopics.buy
                     })
                 }else{
-                    this.setUser(this.context.user!.uid)
+                    this.setUser(user.uid)
                 }
             })
             .catch((e : any)=>{
                 console.log(e);
-            })
+            });
     }
 
     setUser = (userId : string) =>{
         database.ref("/users/" + userId).set({
-            user : this.context.user!.email,
-            [this.props.match.params.id] : {
-                data : this.state.dataTopic,
-                buy : false
+            user : _.pick(this.context.user , ["displayName" , "email"]),
+            subject : {
+                [this.props.match.params.id]: {
+                    data: this.state.dataTopic,
+                    buy: false
+                }
             }
         });
+    }
+
+    resetData = () => {
+        var react : this = this;
+        return database.ref("/users/" + this.context.user!.uid + "/subject").once("value").then((data : any)=>{
+            if (data.val()) {
+                const UserTopics: UserTopics = {
+                    data: data.val()[react.props.match.params.id].data,
+                    buy: data.val()[react.props.match.params.id].buy ? data.val()[react.props.match.params.id].buy : false
+                };
+                react.state.dataTopic!.forEach((val: MyTopics, i: number, arr: MyTopics[]) => {
+                    if (val.name === UserTopics.data[i].name) {
+                        val = UserTopics.data[i];
+                    }
+                })
+                react.setState({
+                    dataTopic: UserTopics.data,
+                    buy: UserTopics.buy
+                })
+            } else {
+                this.setUser(this.context.user!.uid)
+            }
+        })
     }
 
     topicHandler = (e : CustomEvent<any>,id : string , index : number) => {
@@ -140,8 +175,166 @@ class Topics extends Component<Props , State>{
         return completion / allTopics.questions.length * 100;
     }
 
+    sendCompletionData = (topicName : string , completion : number) => {
+        const adjustData : MyTopics[] = [
+            ...this.state.dataTopic
+        ];
+
+        var react : this = this;
+
+        adjustData.map((val : MyTopics, i : number , arr : MyTopics[])=>{
+            if(val.name === topicName){
+                val.completion = completion;
+            }
+        });
+
+        // Bad saving state behavior because its under a loop
+        // this.setState((prevState : State)=>{
+        //     return {
+        //         dataTopic : adjustData
+        //     }
+        // })
+
+        // database.ref("/users/" + this.context.user!.uid + "/subject/" + this.props.match.params.id).update({
+        //     data: adjustData
+        // });
+    }
+
     toCapitalize = (word : string) =>{
         return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    buyHandler = () =>{
+        var react : this = this;
+        return this.setState({
+            buy : true,
+            popover : false
+        },function(){
+            database.ref("/users/" + react.context.user!.uid + "/subject/" + react.props.match.params.id).update({
+                buy : react.state.buy
+            })
+        })
+    }
+
+    resetHandler = (name : string) =>{
+        const ResetTopic : MyTopics[] = [
+            ...this.state.dataTopic
+        ];
+
+        var react : this = this;
+
+        ResetTopic!.map((val : MyTopics , i : number , arr : MyTopics[])=>{
+            if(val.questions && val.name === name){
+                // Delete Completion Data
+                delete val.completion;
+                val.questions.map((value : Questions , index : number , array : Questions[])=>{
+                    if(value.userAnswer){
+                        // Delete User Answer
+                        delete value.userAnswer
+                    }
+                })
+            }
+        })
+
+        database.ref("/users/" + this.context.user!.uid + "/subject/" + react.props.match.params.id).set({
+            data : ResetTopic,
+            buy : true
+        },function(error : any){
+            if(error){
+                console.log(error);
+            }else{
+                react.resetData();
+            }
+        });
+    }
+
+    confirmPassword = (password : string) =>{
+        var user = firebase.auth().currentUser;
+        var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
+        var react : this = this;
+        return user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
+            return react.buyHandler();
+        }).catch((e : any)=>{
+            return react.setState({
+                popover: false,
+                toast : {
+                    showToast : true,
+                    duration : 2000,
+                    position : "bottom",
+                    message : e.message,
+                    header : "ERROR :",
+                    dismissHandler : ()=>{
+                        react.setState({
+                            toast : {
+                                showToast : false
+                            }
+                        })
+                    }
+                }
+            })
+        })
+    }
+
+    masterPopover = (func: (e: any) => void) =>{
+        var style: any = {
+            textAlign: "center",
+            padding: "5px",
+            lineHeight: "20px"
+        } as CSSProperties;
+        return (
+            <form>
+                <p style={style}>Enter Your Password to confirm your <span style={{
+                    textDecoration: "underline"
+                }}>Purchase</span></p>
+                <InputElements data={[
+                    {
+                        name: "confirmPassword",
+                        type: "password",
+                        placeholder: "Confirm Password",
+                        required: true,
+                        enableLabel: true,
+                        label: "Re-enter Password",
+                        position: "floating"
+                    }
+                ]} />
+                <IonButtons>
+                    <IonButton
+                        style={{
+                            "--background": "var(--ion-color-medium)",
+                            margin: "0",
+                            flex: "1",
+                            color: "var(--ion-color-primary)",
+                            height: "50px"
+                        }}
+                        expand="full"
+                        size="large"
+                        type="button"
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            return this.setState((prevState: State) => {
+                                return {
+                                    popover : !prevState.popover
+                                }
+                            })
+                        }}>
+                        Cancel
+                    </IonButton>
+                    <IonButton
+                        style={{
+                            "--background": "var(--ion-color-secondary)",
+                            margin: "0",
+                            flex: "1",
+                            height: "50px"
+                        }}
+                        expand="full"
+                        size="large"
+                        type="button"
+                        onClick={(e: any) => func(e)}>
+                        Confirm
+                    </IonButton>
+                </IonButtons>
+            </form>
+        )
     }
 
     render(){
@@ -210,6 +403,17 @@ class Topics extends Component<Props , State>{
 
         return (
             <Aux>
+                <Popover 
+                    open={this.state.popover}
+                    backdropDismiss={false}>
+                    {this.masterPopover((e : any)=>{
+                        e.preventDefault();
+                        var password: string = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
+                        return this.confirmPassword(password);
+                    })}
+                </Popover>
+                <MyToast
+                    toast={this.state.toast}/>
                 {!this.state.nested ? 
                 <Aux>
                     <Content 
@@ -251,6 +455,8 @@ class Topics extends Component<Props , State>{
                                         progressColor[progressColorName] = "var(--ion-color-danger)";
                                     }
 
+                                    this.sendCompletionData(val.name, this.calculateCompletion(val, i));
+
                                     return (
                                         <IonCard key={i + val.name} style={cardStyle}>
                                             <div style={{
@@ -288,15 +494,28 @@ class Topics extends Component<Props , State>{
                                                     }}>
                                                     Start Study
                                                 </IonButton>
-                                                <IonButton
-                                                    expand="full"
-                                                    fill="solid"
-                                                    style={[buttonStyle, BuyNowStyle].reduce((init: any, next: any) => Object.assign(init, next), {})}
-                                                    onClick={(e: any) => {
-                                                        this.topicHandler(e, "topics", i)
-                                                    }}>
-                                                    Buy Now
-                                                </IonButton>
+                                                {
+                                                    this.state.buy ? 
+                                                    <IonButton
+                                                            expand="full"
+                                                            fill="solid"
+                                                            style={[buttonStyle, BuyNowStyle].reduce((init: any, next: any) => Object.assign(init, next), {})}
+                                                            onClick={(e: any) => this.resetHandler(val.name)}>
+                                                            Reset Progress
+                                                    </IonButton>
+                                                    :
+                                                    <IonButton
+                                                        expand="full"
+                                                        fill="solid"
+                                                        style={[buttonStyle, BuyNowStyle].reduce((init: any, next: any) => Object.assign(init, next), {})}
+                                                        onClick={(e : any) => {
+                                                            this.setState({
+                                                                popover : true
+                                                            })
+                                                        }}>
+                                                        Buy Now
+                                                    </IonButton>
+                                                }
                                             </IonButtons>
                                         </IonCard>
                                     )

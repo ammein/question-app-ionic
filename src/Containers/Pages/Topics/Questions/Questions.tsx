@@ -54,10 +54,8 @@ class QuestionsContent extends Component<Props , State>{
             }
         })
 
-        database.ref("/users/" + this.context.user!.uid).update({
-            [react.props.match.params.id] : {
-                data: updatedQuestions
-            }
+        database.ref("/users/" + this.context.user!.uid + "/subject/" + react.props.match.params.id).update({
+            data: updatedQuestions
         })
     }
 
