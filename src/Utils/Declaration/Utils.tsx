@@ -89,7 +89,8 @@ export interface MyUser extends IndexMyUser{
     emailVerified : boolean,
     displayName? : string,
     uid : string,
-    email : string
+    email : string,
+    photoURL ? : string
 }
 
 interface IndexMyUser{

@@ -74,12 +74,14 @@ class Layout extends Component<Props , State>{
         var react = this;
         firebase.auth().onAuthStateChanged(function (user : any) {
             if (user) {
+                // Update user to pass onto context
                 return react.setState({
                     user : {
                         uid : user.uid,
                         email : user.email,
                         displayName : user.displayName,
-                        emailVerified : user.emailVerified
+                        emailVerified : user.emailVerified,
+                        photoURL: user.photoURL ? user.photoURL : ""
                     }
                 })
             } else {

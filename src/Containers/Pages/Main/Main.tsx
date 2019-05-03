@@ -406,6 +406,7 @@ class Main extends PureComponent<Props , State>{
             var user = firebase.auth().currentUser;
             if (user && user.emailVerified) {
                 this.setState((prevState: State) => {
+                    // Used only for login purpose
                     return {
                         user : {
                             uid : user.uid,

@@ -36,11 +36,11 @@ class Home extends Component<Props , State>{
         var name : string | null = (e.currentTarget! as Element).textContent;
 
         if(name!.toLowerCase() === "mathematics"){
-            return this.props.history.push("/mathematics");
+            return this.props.history.push("/learn/mathematics");
         }else if(name!.toLowerCase() === "english"){
-            return this.props.history.push("/english");
+            return this.props.history.push("/learn/english");
         }else if(name!.toLowerCase() === "science"){
-            return this.props.history.push("/science");
+            return this.props.history.push("/learn/science");
         }else{
             return;
         }

@@ -5,6 +5,7 @@ import Topics from "../Containers/Pages/Topics/Topics";
 import Description from "../Containers/Pages/Topics/Description/Description";
 import Questions from "../Containers/Pages/Topics/Questions/Questions";
 import Notes from "../Containers/Pages/Topics/Notes/Notes";
+import Rankings from "../Containers/Pages/Rankings/Rankings";
 
 declare const firebase : any;
 
@@ -22,6 +23,13 @@ const Routes : MyRoutes[] = [
         }
     },
     {
+        path : "/rankings",
+        menu : true,
+        title : "Rankings",
+        link : true,
+        component : Rankings
+    },
+    {
         path : "/profile",
         menu : true,
         title : "Profile",
@@ -29,13 +37,13 @@ const Routes : MyRoutes[] = [
         link : true
     },
     {
-        path : "/:id",
+        path : "/learn/:id",
         menu : false,
         title : "Choose Topics",
         component: Topics,
         childrenComponent : [
             {
-                path: "/:id/:topic/:index/description",
+                path: "/learn/:id/:topic/:index/description",
                 menu: false,
                 title: "Description",
                 component : Description,
@@ -43,7 +51,7 @@ const Routes : MyRoutes[] = [
                 segment: true,
             },
             {
-                path: "/:id/:topic/:index/notes",
+                path: "/learn/:id/:topic/:index/notes",
                 menu: false,
                 title: "Notes",
                 component : Notes,
@@ -51,7 +59,7 @@ const Routes : MyRoutes[] = [
                 segment: true,
             },
             {
-                path: "/:id/:topic/:index/questions",
+                path: "/learn/:id/:topic/:index/questions",
                 menu: false,
                 title: "Questions",
                 component : Questions,

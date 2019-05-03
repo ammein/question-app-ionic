@@ -57,7 +57,7 @@ class Topics extends Component<Props , State>{
             .then(({data} : any)=>{
                 console.log(data);
                 react.setState({
-                    dataTopic : [...data]
+                    dataTopic: [...data]
                 })
                 return database.ref("/users/" + this.context.user!.uid + "/subject").once("value");
             })
@@ -106,7 +106,7 @@ class Topics extends Component<Props , State>{
         })
 
         database.ref("/users/" + userId).set({
-            user : _.pick(this.context.user , ["displayName" , "email"]),
+            user : _.pick(this.context.user , ["displayName" , "email" , "photoURL"]),
             subject : {
                 [this.props.match.params.id]: {
                     data: this.state.dataTopic,
@@ -147,7 +147,7 @@ class Topics extends Component<Props , State>{
             index : index
         })
         this.props.history.push({
-            pathname : `/${this.props.match.params.id}/${id}/${index}/description`,
+            pathname : `/learn/${this.props.match.params.id}/${id}/${index}/description`,
             state : {
                 ...this.state,
                 topicActive :this.state.dataTopic![index]
@@ -171,7 +171,7 @@ class Topics extends Component<Props , State>{
                     }
                 },function(){
                     react.props.history.push({
-                        pathname: `/${react.props.match.params.id}/${react.state.topic}/${react.state.index}/${id}`,
+                        pathname: `/learn/${react.props.match.params.id}/${react.state.topic}/${react.state.index}/${id}`,
                         state: {
                             ...react.state,
                             topicActive: react.state.dataTopic![react.state.index as number]
@@ -195,8 +195,8 @@ class Topics extends Component<Props , State>{
     }
 
     componentDidUpdate(){
-        // Update Completion Data
-        if (this.state.dataTopic && document.querySelector("#completion")){
+        // Update Completion Data (Only if state.buy is available & HTML id="completion" available on DOM)
+        if (this.state.dataTopic && this.state.buy && document.querySelector("#completion")){
             const updatedTopics: MyTopics[] = [
                 ...this.state.dataTopic
             ];
@@ -552,7 +552,7 @@ class Topics extends Component<Props , State>{
                                     nested: false
                                 }, function () {
                                     return react.props.history.push({
-                                        pathname: `/${react.props.match.params.id}`
+                                        pathname: `/learn/${react.props.match.params.id}`
                                     })
                                 })
                             }}>

@@ -1,0 +1,12 @@
+.list{
+    background : var(--ion-color-primary);
+}
+
+.userList{
+    --background : var(--ion-color-primary-shade);
+}
+
+.userPhoto {
+    --border-radius : 50%;
+    --size : 20%;
+}
