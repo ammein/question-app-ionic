@@ -9,7 +9,8 @@ export interface MyFirebase {
             once(value : "value" | undefined) : Promise<any>,
             on(value: "value" | undefined , callback : (snapshot : any)=>void): Promise<any>,
             set(value : any , callback? : (error : any) => void) : any
-            update(value: any): any
+            update(value: any): any,
+            remove() : any
         }
     },
     auth : {

@@ -29,7 +29,8 @@ interface State {
     savePassword : boolean,
     newEmail ? : string,
     newPassword ? : string,
-    photoURL : string
+    photoURL : string,
+    deleteAccount : boolean
 }
 
 var styleInput: CSSProperties = {
@@ -84,7 +85,8 @@ class Profile extends Component<Props , State>{
             saving : false,
             saveEmail : false,
             savePassword : false,
-            photoURL : ""
+            photoURL : "",
+            deleteAccount : false
         }
     }
 
@@ -318,6 +320,54 @@ class Profile extends Component<Props , State>{
         });
     }
 
+    deleteAccountUser = (password : string) =>{
+        var user = firebase.auth().currentUser;
+        var react = this;
+        // Credential
+        react.setState({
+            deleteAccount : false
+        })
+        var credential = firebase.auth.EmailAuthProvider.credential(firebase.auth().currentUser.email, password);
+        return user.reauthenticateAndRetrieveDataWithCredential(credential).then(function () {
+            firebase.database().ref("/users/" + user.uid).remove();
+            return user.delete();
+        }).then(() => {
+            return react.setState({
+                toast : {
+                    showToast : true,
+                    message : "You successfully delete your account",
+                    header : "Account Deleted Successfully !",
+                    duration : 6000,
+                    position : "top",
+                    dismissHandler : (()=>{
+                        react.setState({
+                            toast : {
+                                showToast : false
+                            }
+                        })
+                    })
+                }
+            })
+        }).catch((e : any)=>{
+            return react.setState({
+                toast: {
+                    showToast: true,
+                    message: e.message,
+                    header: "ERROR !",
+                    duration: 6000,
+                    position: "top",
+                    dismissHandler: (() => {
+                        react.setState({
+                            toast: {
+                                showToast: false
+                            }
+                        })
+                    })
+                }
+            })
+        })
+    }
+
     masterPopover = (func : (e : any)=> void) =>{
         var style : any = {
             textAlign : "center",
@@ -367,7 +417,8 @@ class Profile extends Component<Props , State>{
                                 return {
                                     saving: false,
                                     saveEmail: false,
-                                    savePassword: false
+                                    savePassword: false,
+                                    deleteAccount : false
                                 }
                             })
                         }}>
@@ -494,6 +545,12 @@ class Profile extends Component<Props , State>{
             padding : "0 15px"
         } as CSSProperties;
 
+        const deleteStyle : any = {
+            "--background": "var(--ion-color-danger)",
+            margin: "20px 0 0 0",
+            padding: "0 15px"
+        } as CSSProperties;
+
         var Saving : JSX.Element;
 
         if(this.state.saving){
@@ -534,6 +591,16 @@ class Profile extends Component<Props , State>{
                         return this.updatePassword(this.state.newPassword as string, password);
                     })}
                 </Popover>
+                <Popover
+                    open={this.state.deleteAccount}
+                    backdropDismiss={false}>
+                    {this.masterPopover((e: any) => {
+                        e.preventDefault();
+                        var password: string;
+                        password = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
+                        return this.deleteAccountUser(password);
+                    })}
+                </Popover>
                 <MyToast toast={this.state.toast}/>
                 <div className={classes.userPhoto}>
                     <IonAvatar 
@@ -552,6 +619,16 @@ class Profile extends Component<Props , State>{
                         Update
                     </IonButton>
                 </form>
+                <IonButton
+                    style={deleteStyle as any}
+                    expand="full"
+                    size="default"
+                    type="button"
+                    onClick={(() => this.setState({
+                        deleteAccount : true
+                    }))}>
+                    Delete Account
+                </IonButton>
             </Content>
             </Aux>
         )
