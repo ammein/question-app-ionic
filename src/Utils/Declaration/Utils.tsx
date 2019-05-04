@@ -81,7 +81,8 @@ export interface MyTopics {
 
 export interface UserTopics{
     data : MyTopics[]
-    buy ?: boolean
+    buy ?: boolean,
+    [index : string] : any // To extend or create any object via property name
 }
 
 
@@ -117,6 +118,26 @@ export interface Toast{
     position?: "top" | "bottom" | "middle" | undefined,
     buttons? : any[],
     color?: "primary" | "secondary" | "tertiary" | "success" | "warning" | "danger" | "light" | "medium" | "dark" 
+}
+
+export interface CordovaCamera{
+    PictureSourceType: {
+        CAMERA: any,
+        PHOTOLIBRARY: any,
+        SAVEDPHOTOALBUM: any
+    },
+    DestinationType: {
+        FILE_URI: any,
+        DATA_URL : any,
+        NATIVE_URI : any
+    },
+    EncodingType: {
+        JPEG: any,
+        PNG: any
+    },
+    MediaType: {
+        PICTURE: any
+    }
 }
 
 export interface firebaseEmailVerification {

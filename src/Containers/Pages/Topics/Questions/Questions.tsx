@@ -2,9 +2,10 @@ import React , { Component, ContextType } from 'react';
 import Aux from '../../../../HOC/Auxilliary/Auxilliary';
 import { MyProps , Questions, MyTopics } from '../../../../Utils/Declaration/Utils';
 import QuestionInstance from '../../../../HOC/Axios/Axios';
-import { IonCard, IonCardTitle, IonRadioGroup, IonList, IonLabel, IonRadio } from '@ionic/react';
+import { IonCard, IonCardTitle, IonRadioGroup, IonList, IonLabel, IonRadio, IonText, IonListHeader } from '@ionic/react';
 import { MyFirebase } from '../../../../Utils/Firebase/AuthenticationSetting';
 import context from '../../../../HOC/Context/Context';
+import classes from './Questions.css'
 
 declare const firebase : MyFirebase;
 
@@ -60,9 +61,32 @@ class QuestionsContent extends Component<Props , State>{
     }
 
     render() {
+
+        var BuyNow : JSX.Element | null;
+
+        if(!this.props.location.state.buy){
+            BuyNow = (
+                <div className={classes.BuyNow}>
+                    <IonText style={{
+                        padding : "15px"
+                    }}>
+                        <h1>
+                            Buy the subject to continue learning
+                        </h1>
+                    </IonText>
+                </div>
+            )
+        }else{
+            BuyNow = null;
+        }
+
+
         return (
             <Aux>
-                <p>Answer all the questions :</p>
+                {BuyNow}
+                <IonList class={classes.list}>
+                    <IonListHeader>Answer all the questions :</IonListHeader>
+                </IonList>
                 <div style={{
                     margin: "0 0 120px 0"
                 }}>
@@ -70,18 +94,22 @@ class QuestionsContent extends Component<Props , State>{
                     this.state.data ? 
                     this.state.data!.map((val: Questions, index: number, arr: Questions[])=>{
                         return (
-                            <IonCard key={index + val.question}>
-                                <IonCardTitle>{val.question}</IonCardTitle>
+                            <IonCard 
+                                class={classes.card}
+                                key={index + val.question}>
+                                <IonCardTitle style={{
+                                    padding : "15px"
+                                }}>{val.question}</IonCardTitle>
                                 <IonRadioGroup>
                                     {val.answers.map((value: string, i: number, arr: string[]) => {
                                         return (
                                             <IonList key={value}>
-                                                <IonLabel>{value}</IonLabel>
-                                                <IonRadio 
-                                                    slot="start" 
-                                                    value={value} 
+                                                <IonRadio
+                                                    slot="start"
+                                                    value={value}
                                                     checked={this.props.location.state.topicActive.questions[index].userAnswer && this.props.location.state.topicActive.questions[index].userAnswer === value ? true : false}
-                                                    onIonSelect={(e: any) => this.radioSelected(e , val.question)}></IonRadio>
+                                                    onIonSelect={(e: any) => this.radioSelected(e, val.question)}></IonRadio>
+                                                <IonLabel class={classes.answer}>{value}</IonLabel>
                                             </IonList>
                                         )
                                     })}

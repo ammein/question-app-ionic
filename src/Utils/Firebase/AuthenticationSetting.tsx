@@ -8,12 +8,16 @@ export interface MyFirebase {
         ref(link : string) : {
             once(value : "value" | undefined) : Promise<any>,
             on(value: "value" | undefined , callback : (snapshot : any)=>void): Promise<any>,
-            set(value : any , callback? : (error : any) => void) : void,
-            update(value : any) : void 
+            set(value : any , callback? : (error : any) => void) : any
+            update(value: any): any
         }
     },
     auth : {
         () : {
+            onAuthStateChanged(user: any): void,
+            createUserWithEmailAndPassword(email : string , password : string) : Promise<void>,
+            signInWithEmailAndPassword(email : string , password : string) : Promise<void>,
+            sendPasswordResetEmail(email : string) : Promise<void>,
             currentUser : MyUser extends any? MyUser : any
         }
         EmailAuthProvider: {

@@ -1,12 +1,23 @@
-import React , { Component , CSSProperties } from 'react';
+import React , { Component , CSSProperties, ContextType } from 'react';
 import Content from '../../../HOC/Content/Content';
 import InputElements from '../../../Components/UI/Inputs/Inputs';
-import {Inputs, Toast, MyProps} from '../../../Utils/Declaration/Utils';
-import { IonButton, IonButtons } from '@ionic/react';
+import {Inputs, Toast, MyProps , CordovaCamera} from '../../../Utils/Declaration/Utils';
+import { IonButton, IonButtons, IonList, IonAvatar, IonImg, IonLabel } from '@ionic/react';
 import MyToast from '../../../Components/UI/Toast/Toast';
 import Loading from '../../../Components/Loading/Loading';
 import Popover from '../../../Components/UI/Popover/Popover';
 import Aux from '../../../HOC/Auxilliary/Auxilliary';
+import { MyFirebase } from '../../../Utils/Firebase/AuthenticationSetting';
+import Context from '../../../HOC/Context/Context';
+import _ from 'lodash';
+import defaultPhoto from '../../../Assets/Images/emptyuser.png';
+import classes from './Profile.css'
+
+declare const firebase : MyFirebase;
+
+declare const Camera : CordovaCamera;
+
+declare const cordova : any;
 
 interface Props extends MyProps {}
     
@@ -17,7 +28,8 @@ interface State {
     saveEmail : boolean,
     savePassword : boolean,
     newEmail ? : string,
-    newPassword ? : string
+    newPassword ? : string,
+    photoURL : string
 }
 
 var styleInput: CSSProperties = {
@@ -29,9 +41,10 @@ var styleInput: CSSProperties = {
     marginBottom: "20px"
 }
 
-declare const firebase : any;
-
 class Profile extends Component<Props , State>{
+
+    static contextType = Context;
+    context!: ContextType<typeof Context>
 
     constructor(props : Props){
         super(props)
@@ -70,13 +83,15 @@ class Profile extends Component<Props , State>{
             },
             saving : false,
             saveEmail : false,
-            savePassword : false
+            savePassword : false,
+            photoURL : ""
         }
     }
 
     componentDidMount(){
         console.log("Running Component Did Mount");
         console.log("Location" , this.props.location)
+        var react : this = this;
         var user = firebase.auth().currentUser;
         var userProfile = this.state.profile;
         var updatedUserProfile = [
@@ -84,10 +99,15 @@ class Profile extends Component<Props , State>{
         ];
 
         user.reload().then(()=>{
-            this.state.profile.forEach((val : Inputs , i : number , arr : Inputs[])=>{
+            if(user && user.emailVerified && user.photoURL){
+                react.setState({
+                    photoURL : user.photoURL
+                })
+            }
+            react.state.profile.forEach((val : Inputs , i : number , arr : Inputs[])=>{
                 if(user[val.name] && user[val.name] !== val.value){
                     updatedUserProfile[i].value = user[val.name];
-                    return this.setState((prevState: State) => {
+                    return react.setState((prevState: State) => {
                         return {
                             profile: updatedUserProfile
                         }
@@ -148,6 +168,11 @@ class Profile extends Component<Props , State>{
             else if(val.value){
                 console.log("Updated Value ", val.value);
                 updatedProfile[i].value = val.value;
+                if(val.name === "displayName"){
+                    firebase.database().ref("/users/"+this.context.user!.uid + "/user/").update({
+                        [val.name] : val.value                   
+                    })
+                }
                 return react.setState({
                     profile : updatedProfile
                 },function(){
@@ -172,13 +197,11 @@ class Profile extends Component<Props , State>{
                         })
                     })
                 })
-                // console.log("Updated Profile : \n" , updatedProfile);
-                
             }
         });
     }
 
-    updatePassword = (newPassword ?: string , password ?: string) => {
+    updatePassword = (newPassword : string , password : string) => {
         var user = firebase.auth().currentUser;
         var react = this;
         react.setState({
@@ -229,7 +252,7 @@ class Profile extends Component<Props , State>{
         });
     }
 
-    updateEmail = (email ?: string ,password ?: string) =>{
+    updateEmail = (email : string ,password : string) =>{
         var user = firebase.auth().currentUser;
         var react = this;
         react.setState({
@@ -368,6 +391,101 @@ class Profile extends Component<Props , State>{
         )
     }
 
+    setOptions = (srcType : CordovaCamera) =>{
+        return {
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            // In this app, dynamically set the picture source, Camera or photo gallery
+            sourceType: srcType,
+            encodingType: Camera.EncodingType.JPEG,
+            mediaType: Camera.MediaType.PICTURE,
+            targetWidth : 50,
+            targetHeight : 50,
+            allowEdit: true,
+            correctOrientation: true  //Corrects Android orientation quirks
+        }
+    }
+
+    captureImage = () =>{
+        console.log("Running Camera Function");
+        if(navigator.camera){
+            console.log("Running Camera If Else")
+            return navigator.camera.getPicture(this.cameraSuccess, this.cameraError, this.setOptions(Camera.PictureSourceType.CAMERA));
+        }
+        return;
+    }
+
+    cameraSuccess = (imageData : any) =>{
+        var react : this = this;
+        var image = "data:image/jpeg;base64,"+imageData;
+        this.setState({
+            photoURL : image
+        } , function(){
+            firebase.auth().currentUser.updateProfile({
+                photoURL: image
+            }).then(()=>{
+                return firebase.database().ref("/users/" + firebase.auth().currentUser.uid + "/user/").update({
+                    photoURL: image
+                });
+            }).then(()=>{
+                react.setState({
+                    toast: {
+                        showToast: true,
+                        position: "top",
+                        header: "SUCCESS !",
+                        message: "Nice Photo ! :)",
+                        duration: 2000,
+                        dismissHandler: (() => {
+                            react.setState({
+                                toast: {
+                                    showToast: false
+                                }
+                            })
+                        })
+                    }
+                })
+            }).catch((e : any)=>{
+                react.setState({
+                    toast: {
+                        showToast: true,
+                        position: "bottom",
+                        header: "ERROR !",
+                        message: "Oops ! Your photo does not upload successfully to server. You might wanna to try again later \n : " + e.message,
+                        duration: 10000,
+                        dismissHandler: (() => {
+                            react.setState({
+                                toast: {
+                                    showToast: false
+                                }
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    }
+
+    cameraError = (message : any) =>{
+        console.log("Capture camera fails : " , message)
+        var react :this = this;
+        react.setState({
+            toast: {
+                showToast: true,
+                position: "top",
+                header: "ERROR !",
+                message: message,
+                duration: 2000,
+                dismissHandler: (() => {
+                    react.setState({
+                        toast: {
+                            showToast: false
+                        }
+                    })
+                })
+            }
+        })
+    }
+
     render() : any{
 
         const buttonStyle : any = {
@@ -403,7 +521,7 @@ class Profile extends Component<Props , State>{
                         e.preventDefault();
                         var password: string;
                         password = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
-                        return this.updateEmail(this.state.newEmail, password);
+                        return this.updateEmail(this.state.newEmail as string, password);
                     })}
                 </Popover>
                 <Popover
@@ -413,10 +531,17 @@ class Profile extends Component<Props , State>{
                         e.preventDefault();
                         var password: string;
                         password = e.currentTarget.parentElement.parentElement.querySelector("input[name='confirmPassword']").value;
-                        return this.updatePassword(this.state.newPassword, password);
+                        return this.updatePassword(this.state.newPassword as string, password);
                     })}
                 </Popover>
                 <MyToast toast={this.state.toast}/>
+                <div className={classes.userPhoto}>
+                    <IonAvatar 
+                        onClick={this.captureImage}>
+                            <IonImg src={this.state.photoURL.length > 0 ? this.state.photoURL : defaultPhoto}></IonImg>
+                    </IonAvatar>
+                    <p>Tap Here To Upload Picture</p>
+                </div>
                 <form method="post" onSubmit={((e : any)=> this.submitHandler(e))}>
                     <InputElements data={this.state.profile}/>
                     <IonButton 

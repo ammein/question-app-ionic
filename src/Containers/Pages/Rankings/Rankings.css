@@ -9,4 +9,23 @@
 .userPhoto {
     --border-radius : 50%;
     --size : 20%;
+    margin-right : 10px;
+}
+
+.header {
+    padding : 0 16px;
+}
+
+.more{
+    padding : 10px;
+}
+
+.details{
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.paragraphDetails{
+    font-size: 12px !important;
+    line-height: 14px !important;
 }

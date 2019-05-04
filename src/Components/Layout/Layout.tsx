@@ -6,12 +6,14 @@ import MyRoutes from '../../Utils/Routes';
 import AllRoutes, { MyUser, MyProps } from '../../Utils/Declaration/Utils';
 import Context from '../../HOC/Context/Context';
 import Aux from '../../HOC/Auxilliary/Auxilliary';
+import { MyFirebase } from '../../Utils/Firebase/AuthenticationSetting';
+import _ from 'lodash';
 
 export var hashHistory = require("history").createHashHistory;
 
 const createHashHistory = hashHistory();
 
-declare const firebase : any;
+declare const firebase : MyFirebase;
 
 interface Props extends MyProps {}
 
@@ -83,6 +85,10 @@ class Layout extends Component<Props , State>{
                         emailVerified : user.emailVerified,
                         photoURL: user.photoURL ? user.photoURL : ""
                     }
+                },function(){
+                    firebase.database().ref("/users/" + react.state.user.uid).update({
+                        user: _.pick(react.state.user , ["displayName" , "email" , "photoURL"])
+                    })
                 })
             } else {
                 return;

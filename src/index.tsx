@@ -22,6 +22,12 @@ if (window.cordova) {
 declare global {
     interface Window {
         cordova: any,
-        plugins : any
+        plugins : any,
+        resolveLocalFileSystemURL : any,
+        file : any
+    }
+
+    interface Navigator{
+        camera : any
     }
 }

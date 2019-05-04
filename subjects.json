@@ -160,7 +160,214 @@
                     ]
                 }
             ]
-        }
+        },
 
+        "mathematics": {
+            "topics": [{
+                    "name": "Addition & Subtraction",
+                    "description": "Addition and subtraction are two ways to operate on two or more numbers to create a third number of equivalent value",
+                    "notes": {
+                        "src": "http://www.homeofbob.com/math/numVluOp/wholeNum/addSub/concpts.html"
+                    },
+                    "questions": [{
+                            "question": "3 + 3 = 9",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "10 - 5 = 5",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "12 - 12 = 0",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "6 + 7 = 67",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "1 + 9 = 10",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        }
+                    ]
+                },
+                {
+                    "name": "Multiply & Division",
+                    "description": "An arrangement of objects, pictures, or numbers in columns and rows is called an array. Your students used arrays earlier to multiply. See Using Arrays to Show Multiplication Concepts. In this chapter your students will learn how to use arrays to show the relationship between multiplication and division.",
+                    "notes": [{
+                            "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqeBU5YfZJ2VwuKT53g013ECfQJM9cR_jwfWBSTI7TKBn_5tvY"
+                        },
+                        {
+                            "imageURL": "https://i.ytimg.com/vi/eBaJshNTM4o/maxresdefault.jpg"
+                        }
+                    ],
+                    "questions": [{
+                            "question": "5 x 3 = 15",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "2 x 2 = 4",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "3 x 2 = 5",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "1 x 9 = 10",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "7 x 3 = 21",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        "science": {
+            "topics": [{
+                    "name": "Learning Science",
+                    "description": "Science is a very fun subject and it gets to help us learn about the Earth and those in it. In grade one we got to understand how to take care of our bodies and the environment around us. Do you have a clear idea of what we have covered in class so far? Test you memory and learn some more through this Science test.",
+                    "notes": {
+                        "src": "https://www.asianscientist.com/wp-content/uploads/bfi_thumb/20160627-Grand-Challenges-of-Science-31qtkdbz2aajgveb3em2gw.jpg"
+                    },
+                    "questions": [{
+                            "question": "Which is a vegetable? Cabbage",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "Which is the food factory of a plant? Root",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "What helps a mammal to breathe? Gills",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "How can fish stay in the water? dance event",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "How do you move? hand",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        }
+                    ]
+                },
+                {
+                    "name": "Science Fun Fun",
+                    "description": "Science is the study of the nature and behaviour of natural things and the knowledge that we obtain about them. ... A science is a particular branch of science such as physics, chemistry, or biology. Physics is the best example of a science which has developed strong, abstract theories.",
+                    "notes": [{
+                            "imageURL": "https://cdn.designbyhumans.com/product_images/p/1023076.f56.27ddaS7ay1Cm2MjUAAA-650x650-b-p.jpg"
+                        },
+                        {
+                            "imageURL": "https://ih0.redbubble.net/image.531694535.3889/flat,550x550,075,f.u1.jpg"
+                        }
+                    ],
+                    "questions": [{
+                            "question": "Dragon Fruit growth in water?",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "sweat produce a water?",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "Sun produce a light on earth",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "True"
+                        },
+                        {
+                            "question": "egg plus with flour became plastercin",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        },
+                        {
+                            "question": "snake is laying",
+                            "answers": [
+                                "True",
+                                "False"
+                            ],
+                            "correctAnswer": "False"
+                        }
+                    ]
+                }
+            ]
+        }
     }
 }

@@ -105,8 +105,7 @@ class Topics extends Component<Props , State>{
 
         })
 
-        database.ref("/users/" + userId).set({
-            user : _.pick(this.context.user , ["displayName" , "email" , "photoURL"]),
+        database.ref("/users/" + userId).update({
             subject : {
                 [this.props.match.params.id]: {
                     data: this.state.dataTopic,

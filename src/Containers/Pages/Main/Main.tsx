@@ -12,8 +12,9 @@ import EmailVerification from '../../../Components/Main/EmailVerification/EmailV
 import Logo from '../../../Assets/SVG/logo.svg';
 import _ from 'lodash';
 import Context from '../../../HOC/Context/Context';
+import { MyFirebase } from '../../../Utils/Firebase/AuthenticationSetting';
 
-declare const firebase : any;
+declare const firebase : MyFirebase;
 
 interface Props {
 
@@ -402,6 +403,7 @@ class Main extends PureComponent<Props , State>{
 
     componentDidMount(){
         var path : string = window.location.hash.length > 1 ? window.location.hash.replace("#" , "") : window.location.pathname;
+        var react : this = this;
         this.checkUser = setInterval(() => {
             var user = firebase.auth().currentUser;
             if (user && user.emailVerified) {
@@ -412,10 +414,16 @@ class Main extends PureComponent<Props , State>{
                             uid : user.uid,
                             email : user.email,
                             displayName : user.displayName,
-                            emailVerified : user.emailVerified
+                            emailVerified : user.emailVerified,
+                            photoURL : user.photoURL
                         },
                         enableEmailVerification: false
                     }
+                },function(){
+                    // Update based on user
+                    firebase.database().ref("/users/" + react.state.user!.uid).update({
+                        user: _.pick(react.state.user , ["displayName" , "email" , "photoURL"])
+                    })
                 })
                 this.context.recheckUser();
                 return;
@@ -517,6 +525,7 @@ class Main extends PureComponent<Props , State>{
         return (
             <Aux>
                 <IonPage>
+                    <div>
                 <Context.Provider value={{
                     user : this.state.user
                 }}>
@@ -605,6 +614,7 @@ class Main extends PureComponent<Props , State>{
                     }
                     </div>
                     </Context.Provider>
+                    </div>
                 </IonPage>
             </Aux>
         )
