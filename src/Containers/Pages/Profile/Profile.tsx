@@ -347,6 +347,10 @@ class Profile extends Component<Props , State>{
                         })
                     })
                 }
+            },function(){
+                return react.props.history.push({
+                    pathname : "/"
+                })
             })
         }).catch((e : any)=>{
             return react.setState({

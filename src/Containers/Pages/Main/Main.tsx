@@ -135,28 +135,11 @@ class Main extends PureComponent<Props , State>{
             return firebase.auth().createUserWithEmailAndPassword(email.value, password.value)
                 .then(() => {
                     var user = firebase.auth().currentUser;
-                    user.sendEmailVerification().then(function () {
-                        // Email sent.
-                        return react.setState({
-                            enableEmailVerification: true
-                        })
-                    }).catch(function (error: any) {
-                        return react.setState({
-                            toast: {
-                                showToast: true,
-                                position : "top",
-                                message: "Email verification cannot be send. Please try again",
-                                duration: 2000,
-                                header: "ERROR :",
-                                dismissHandler: (() => {
-                                    react.setState({
-                                        toast: {
-                                            showToast: false
-                                        }
-                                    })
-                                })
-                            }
-                        })
+                    return user.sendEmailVerification();
+                }).then(function () {
+                    // Email sent.
+                    return react.setState({
+                        enableEmailVerification: true
                     });
                 })
                 .catch(function (error: any) {
@@ -169,7 +152,7 @@ class Main extends PureComponent<Props , State>{
                             message: errorMessage,
                             position : "top",
                             duration: 5000,
-                            header : "ERROR :",
+                            header : `ERROR ${errorCode} :`,
                             dismissHandler: (() => {
                                 react.setState({
                                     toast: {
@@ -350,7 +333,7 @@ class Main extends PureComponent<Props , State>{
                 this.setState({
                     enableEmailVerification: false
                 });
-                recheckUser();
+                this.context.recheckUser();
                 return;
             } else if (user && !user.emailVerified) {
                 console.log("Running Email Not Verified : \n", user);
@@ -374,26 +357,6 @@ class Main extends PureComponent<Props , State>{
                     }
                 })
             }
-        }).catch((e : any)=>{
-            return this.setState({
-                enableEmailVerification: true,
-                toast: {
-                    showToast: true,
-                    message: e,
-                    header: "ERROR :",
-                    dismissHandler: (() => {
-                        react.setState((prevState: State) => {
-                            return {
-                                toast: {
-                                    showToast: false
-                                }
-                            }
-                        })
-                    }),
-                    duration: 2000,
-                    position: "top"
-                }
-            })
         })
     }
 
