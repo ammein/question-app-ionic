@@ -1,41 +1,204 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Installation Setup
+> Extract Tutorial from [https://github.com/ionic-team/ionic-react-conference-app](https://github.com/ionic-team/ionic-react-conference-app)
+```bash
+# Install the Create React App CLI.
 
-## Available Scripts
+npm install -g create-react-app
 
-In the project directory, you can run:
+# Install the Cordova CLI.
 
-### `npm start`
+npm install -g cordova
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Create the project.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+create-react-app tutorial --typsescript
 
-### `npm test`
+# Install Ionic and dependencies
+npm install --save typescript @types/node @types/react @types/react-dom @types/jest @ionic/core @ionic/react
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# or
 
-### `npm run build`
+yarn add typescript @types/node @types/react @types/react-dom @types/jest @ionic/core @ionic/react
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Because we will be editing the Webpack configuration, go to your Create React App project directory and run:
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+yarn run eject
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Go to your `config/paths.js` file and change :
 
-### `npm run eject`
+`appBuild: resolveApp('build')` to `appBuild: resolveApp('www')`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+> Because your files will be served from `file://` (https://github.com/facebookincubator/create-react-app/issues/1094)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Add this line to your `package.json` :
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```json
+"homepage": "."
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Next modify your `index.js` so it looks like:
+```js
+const startApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'));
+  registerServiceWorker();
+};
+
+if(window.cordova) {
+  document.addEventListener('deviceready', startApp, false);
+} else {
+  startApp();
+}
+```
+
+or in `index.tsx` Typescript format :
+```tsx
+const startApp = () =>{
+    ReactDOM.render(<App></App>, document.getElementById('root'));
+
+    // If you want your app to work offline and load faster, you can change
+    // unregister() to register() below. Note this comes with some pitfalls.
+    // Learn more about service workers: https://bit.ly/CRA-PWA
+    serviceWorker.register();
+}
+
+if (window.cordova) {
+    document.addEventListener('deviceready', startApp, false);
+} else {
+    startApp();
+}
+
+declare global{
+    interface Window {
+        cordova : any
+    }
+}
+```
+
+---
+
+# Production Guide (Build Android or iOS app builder for Android Studio or XCode)
+
+These are the commands for generating android file
+```bash
+# Install ionic CLI. Refer : https://ionicframework.com/docs/cli
+npm install -g ionic
+
+# Enable ionic intergrations
+ionic init "My React App" --type=custom
+ionic integrations enable capacitor
+
+# Add android or ios
+ionic capacitor add <android|ios>
+
+# Copy build folder to android build
+ionic capacitor copy
+
+# Generate resources and config.xml on root project
+ionic integrations enable cordova --add
+
+# Run on Android Studio or XCode
+ionic capacitor open <android|ios>
+
+# Install any plugin
+ionic cordova plugin add name-of-plugin
+
+# Update to app
+npx cap update
+```
+
+If you have Android Studio installed on different drive such as D: drive. You may insert this on `capactior.config.json`. This will execute when you running `ionic capacitor open <android|ios>` :
+```json
+{
+    "windowsAndroidStudioPath" : "D:\\Android\\Android Studio\\bin\\studio64.exe"
+}
+```
+
+## If you unable to eject device from Emulator Android Studio
+Run :
+```bash
+adb kill-server
+```
+
+> Make sure add to `Path` on System Variable to your `/Android/Sdk/platform-tools`. Local file located on `C:\Users\<Username>\AppData\Local\Android\Sdk\platform-tools`
+
+### React Router
+For react router typescript , you need these `hashRouter` to make it run normally on `file://` . But first install history npm dependencies :
+
+```bash
+# Ofcourse , install the dependencies first
+npm i -S history
+npm i -S react-router-dom
+```
+On Your Code :
+
+```tsx
+import { Router } from 'react-router-dom';
+var hashHistory = require("history").createHashHistory;
+
+// Use hashHistory for phonegap app enable
+const createHashHistory = hashHistory();
+
+<Router history={createHashHistory}>
+ {/* Other Route here */}
+</Router>
+```
+
+---
+
+## Node JS Deploy Server
+> Deploy any of your `server.js` to Heroku.
+
+Add this line into your `server.js` to enable all CORS origin :
+```js
+// CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
+```
+
+## Point Your Cordova Services to Heroku (Angular/Cordova Framework)
+Modify www/js/services.js and specify the URL where your Node.js server is running :
+```js
+angular.module('directory.services', ['ngResource'])
+    .factory('Employees', function ($resource) {
+        return $resource('http://ionic-directory.herokuapp.com/employees/:employeeId/:data');
+    });
+```
+---
+
+# Typescript tips
+
+Encounter :
+```bash
+Object is possibly null
+```
+
+Solution : 
+> Simply add `!.method()` or `object.data!.data`
+```tsx
+// this.state.cart may be undefined
+this.state!.cart
+
+// obj.data.hey may be undefined
+obj.data!.hey
+
+// obj.data.map(()=> ) may be undefined
+obj.data!.map(() =>)
+```
+
+Flexible set state based on input :
+```tsx
+// For dynamically update state based on target value
+this.setState({ [id]: e.currentTarget.value } as Pick<State, keyof State>);
+```
+
+`JSON.parse()`, `JSON.stringify()` or any method available shows an alert of `does not exist in type of {key : string}` :
+```tsx
+const user: any = await Storage.get({key : "user"} as any);
+```
 
 ## Learn More
 
