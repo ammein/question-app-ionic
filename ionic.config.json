@@ -1,8 +1,0 @@
-{
-  "name": "Question App",
-  "integrations": {
-    "capacitor": {},
-    "cordova": {}
-  },
-  "type": "custom"
-}
