@@ -193,6 +193,8 @@ Flexible set state based on input :
 ```tsx
 // For dynamically update state based on target value
 this.setState({ [id]: e.currentTarget.value } as Pick<State, keyof State>);
+
+// Reference KeyOf : https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html
 ```
 
 `JSON.parse()`, `JSON.stringify()` or any method available shows an alert of `does not exist in type of {key : string}` :
