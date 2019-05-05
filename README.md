@@ -1,4 +1,5 @@
-# Installation Setup
+# React + Typescript + Ionic Project
+## Installation Setup
 > Extract Tutorial from [https://github.com/ionic-team/ionic-react-conference-app](https://github.com/ionic-team/ionic-react-conference-app)
 ```bash
 # Install the Create React App CLI.
